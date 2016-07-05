@@ -1,5 +1,4 @@
 import { UPDATE_MONEY_LEFT } from '../constants/ActionTypes'
-import $ from 'jquery';
 
 let initialState = 0;
 

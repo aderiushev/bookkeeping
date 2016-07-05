@@ -1,5 +1,4 @@
 import { INIT_CATEGORIES, CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from '../constants/ActionTypes'
-import $ from 'jquery';
 
 let initialState = [];
 

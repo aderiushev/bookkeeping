@@ -1,52 +1,36 @@
 import React, { Component, PropTypes } from 'react'
-
 import $ from 'jquery';
-
 var Chart = require('react-google-charts').Chart;
+import * as actions from '../../actions';
 
-const MonthlyChart = React.createClass({
 
-    getInitialState: function() {
-        let columns = [];
-        let rows = [];
-        $.ajax({
-            url: '/monthly-chart',
-            type: 'GET',
-            async: false,
-            success: function(data) {
-                columns = data.columns;
-                rows = data.rows;
-            }
-        });
+class MonthlyChart extends Component {
 
-        return {
-            chart:{
-                columns : [{label:'Date', type:'string'}].concat(columns),
-                rows: rows,
-                height: 500,
-                options: {curveType: 'function', title: "Your Consumptions", hAxis: {title: 'Day'}, vAxis: {title: 'Sum'}},
-                chartType: "LineChart",
-                div_id: "chart"
-            }
-        };
-    },
+    componentDidMount() {
+        actions.getMonthlyChart();
+    };
 
     render() {
-        return this.state.chart.rows.length ?
+        return true ?
             <div>
                 <h2 style={{textAlign:'center'}}>Daily Consumptions Chart</h2>
                 <Chart chartType={this.state.chart.chartType}
                     rows={this.state.chart.rows}
-                    columns={this.state.chart.columns}
-                    options={this.state.chart.options}
-                    height={this.state.chart.height}
-                    graph_id={this.state.chart.div_id}
+                    options={{
+                        curveType: 'function',
+                        title: 'Your Consumptions',
+                        hAxis: {title: 'Day'},
+                        vAxis: {title: 'Sum'}
+                    }}
+                    chartType={'LineChart'}
+                    height={500}
+                    graph_id={'chart'}
                 />
             </div> :
             <div>
                 <h2 style={{textAlign:'center'}}>No data</h2>
             </div>
     }
-});
+}
 
 export default MonthlyChart

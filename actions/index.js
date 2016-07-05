@@ -187,3 +187,29 @@ export function updateMoneyLeft() {
 
     return { type: types.UPDATE_MONEY_LEFT, moneyLeft }
 }
+
+export function getMonthlyChart() {
+    let columns = [];
+    let rows = [];
+    $.ajax({
+        url: '/monthly-chart',
+        type: 'GET',
+        async: false,
+        success: function(data) {
+            columns = data.columns;
+            rows = data.rows;
+        }
+    });
+
+    return {
+        type: types.GET_MONTHLY_CHART,
+        data: {
+            columns: [{label: 'Date', type: 'string'}].concat(columns),
+            rows: rows
+        }
+    };
+}
+
+export function getReports() {
+
+}

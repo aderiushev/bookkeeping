@@ -7,9 +7,6 @@ export default function budget(state = initialState, action) {
         case INIT_BUDGET:
             return action.budget;
 
-        case SET_BUDGET:
-            return action.lastRow;
-
         default:
             return state
     }

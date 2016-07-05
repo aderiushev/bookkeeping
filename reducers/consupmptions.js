@@ -1,5 +1,4 @@
 import { INIT_CONSUMPTIONS, CREATE_CONSUMPTION, UPDATE_CONSUMPTION, DELETE_CONSUMPTION } from '../constants/ActionTypes'
-import $ from 'jquery';
 
 let initialState = [];
 

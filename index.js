@@ -7,10 +7,11 @@ import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import logger from 'redux-logger'
 
-import consumptions from './reducers/consupmptions'
-import categories from './reducers/categories'
-import budget from './reducers/budget'
-import moneyLeft from './reducers/moneyLeft'
+import consumptions from './reducers/consupmptions';
+import categories from './reducers/categories';
+import budget from './reducers/budget';
+import reports from './reducers/reports';
+import moneyLeft from './reducers/moneyLeft';
 
 import App from './containers/App'
 import Reports from './containers/Reports'
@@ -27,6 +28,7 @@ const reducers = combineReducers({
     consumptions,
     categories,
     budget,
+    reports,
     moneyLeft,
     routing: routerReducer
 });

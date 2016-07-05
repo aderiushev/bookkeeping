@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { DateRange, defaultRanges } from 'react-date-range';
 import Toggle from 'material-ui/lib/toggle';
+import * as actions from '../../actions';
 
 
 class RangeCalendar extends Component {
@@ -15,6 +16,8 @@ class RangeCalendar extends Component {
 
     handleChange(date) {
         console.log(date); // Momentjs object
+        actions.getReports();
+
     };
 
     showCalendarToggle() {

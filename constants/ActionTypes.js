@@ -12,3 +12,5 @@ export const INIT_BUDGET = 'INIT_BUDGET';
 export const SET_BUDGET = 'SET_BUDGET';
 
 export const UPDATE_MONEY_LEFT = 'UPDATE_MONEY_LEFT';
+
+export const GET_MONTHLY_CHART = 'GET_MONTHLY_CHART';
