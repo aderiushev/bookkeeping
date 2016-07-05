@@ -32,14 +32,20 @@ const MonthlyChart = React.createClass({
     },
 
     render() {
-        return (
-            <Chart chartType={this.state.chart.chartType}
-                   rows={this.state.chart.rows}
-                   columns={this.state.chart.columns}
-                   options={this.state.chart.options}
-                   height={this.state.chart.height}
-                   graph_id={this.state.chart.div_id}  />
-        )
+        return this.state.chart.rows.length ?
+            <div>
+                <h2 style={{textAlign:'center'}}>Daily Consumptions Chart</h2>
+                <Chart chartType={this.state.chart.chartType}
+                    rows={this.state.chart.rows}
+                    columns={this.state.chart.columns}
+                    options={this.state.chart.options}
+                    height={this.state.chart.height}
+                    graph_id={this.state.chart.div_id}
+                />
+            </div> :
+            <div>
+                <h2 style={{textAlign:'center'}}>No data</h2>
+            </div>
     }
 });
 

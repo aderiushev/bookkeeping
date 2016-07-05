@@ -17,31 +17,29 @@ import $ from 'jquery';
 const MonthlyByCategory = React.createClass({
 
     getInitialState: function() {
-        let tableRows = [];
+        let rows = [];
 
         $.ajax({
             url: '/monthly-by-category',
             type: 'GET',
             async: false,
             success: function(data) {
-                tableRows = data;
+                rows = data;
             }
         });
 
         return {
-            tableRows: tableRows
+            rows
         };
     },
 
     render() {
         let max = 0;
+        this.state.rows.forEach(item => max += item.sum);
 
-        this.state.tableRows.map(function(item, index) {
-            max += item.sum;
-        });
-
-        return (
+        return this.state.rows.length ?
             <div>
+                <h2 style={{textAlign:'center'}}>Consumptions on Categories</h2>
                 <Table selectable={false}>
                     <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
                          <TableRow >
@@ -53,7 +51,7 @@ const MonthlyByCategory = React.createClass({
                     <TableBody
                         displayRowCheckbox={false}
                         showRowHover={true}>
-                        {this.state.tableRows.map((item, index) => (
+                        {this.state.rows.map((item, index) => (
                             <TableRow key={index} selected={false}>
                                 <TableRowColumn>{item.name}</TableRowColumn>
                                 <TableRowColumn>{item.sum}</TableRowColumn>
@@ -62,8 +60,10 @@ const MonthlyByCategory = React.createClass({
                         ))}
                     </TableBody>
                 </Table>
+            </div> :
+            <div>
+                <h2 style={{textAlign:'center'}}>No data</h2>
             </div>
-        )
     }
 });
 

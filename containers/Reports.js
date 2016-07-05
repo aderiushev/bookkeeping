@@ -13,11 +13,8 @@ class Reports extends Component {
         return (
             <div>
                 <RangeCalendar />
-                <h2 style={{textAlign:'center'}}>Daily Consumptions Chart</h2>
                 <MonthlyChart />
-                <h2 style={{textAlign:'center'}}>Daily Consumptions Table:</h2>
                 <MonthlyTable />
-                <h2 style={{textAlign:'center'}}>Consumptions on Categories</h2>
                 <MonthlyConsOnCat />
             </div>
         )

@@ -24,8 +24,8 @@ const MoneyLeft = React.createClass({
             <div>
                 <Badge
                     badgeStyle={{width:50, height: 50, backgroundColor:blue500, color:'white', left: 10}}
-                    badgeContent={parseInt(moneyLeft) + ' P'}>
-                </Badge>&#8381;
+                    badgeContent={parseInt(moneyLeft) + ' ₽'}>
+                </Badge>
             </div>
         )
     }

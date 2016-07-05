@@ -16,66 +16,27 @@ import $ from 'jquery';
 
 const MonthlyTable = React.createClass({
 
-    componentDidMount() {
-        this.setState({
-            budgetPerDayLeft: parseInt(this.context.store.getState().moneyLeft / this.state.month.days_left)
-        });
-    },
-
     getInitialState: function() {
-        let tableRows = [];
-        let budgetPerDay = 0;
-        let month = {};
-
-        $.ajax({
-            url: '/current-budget-per-day',
-            type: 'GET',
-            async: false,
-            success: function(data) {
-                budgetPerDay = data;
-            }
-        });
+        let rows = [];
 
         $.ajax({
             url: '/monthly-table',
             type: 'GET',
             async: false,
             success: function(data) {
-                tableRows = data;
-            }
-        });
-
-        $.ajax({
-            url: '/month',
-            type: 'GET',
-            async: false,
-            success: function(data) {
-                month = data;
+                rows = data;
             }
         });
 
         return {
-            tableRows: tableRows,
-            budgetPerDay: budgetPerDay,
-            month: month
+            rows
         };
     },
 
-    getRate: function(sum) {
-        if (this.state.budgetPerDay > sum) {
-            return (<FontIcon color={green500} className="material-icons">thumb_up</FontIcon>);
-        }
-        else if (this.state.budgetPerDay < sum) {
-            return (<FontIcon color={red500} className="material-icons">thumb_down</FontIcon>);
-        }
-    },
-
     render() {
-        return (
+        return this.state.rows.length ?
             <div>
-                <h3 style={{textAlign:'center'}}>
-                    <strong>Consumptions per day: {this.state.budgetPerDay} -> {this.state.budgetPerDayLeft}</strong>
-                </h3>
+                <h2 style={{textAlign:'center'}}>Daily Consumptions Table:</h2>
                 <Table selectable={false}>
                     <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
                         <TableRow>
@@ -88,21 +49,22 @@ const MonthlyTable = React.createClass({
                     <TableBody
                         displayRowCheckbox={false}
                         showRowHover={true}>
-                        {this.state.tableRows.map((item, index) => (
+                        {this.state.rows.map((item, index) => (
                             <TableRow key={index} selected={false}>
                                 <TableRowColumn>{item.date}</TableRowColumn>
                                 <TableRowColumn>{item.categories}</TableRowColumn>
                                 <TableRowColumn>
-                                    {item.sum}&nbsp;
-                                    {this.getRate(item.sum)}
+                                    {item.sum}
                                 </TableRowColumn>
                                 <TableRowColumn>{item.comments}</TableRowColumn>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
+            </div> :
+            <div>
+                <h2 style={{textAlign:'center'}}>No data</h2>
             </div>
-        )
     }
 });
 
