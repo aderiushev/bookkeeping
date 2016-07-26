@@ -202,14 +202,10 @@ export function getMonthlyChart() {
     });
 
     return {
-        type: types.GET_MONTHLY_CHART,
+        type: types.INIT_MONTHLY_CHART,
         data: {
             columns: [{label: 'Date', type: 'string'}].concat(columns),
             rows: rows
         }
     };
-}
-
-export function getReports() {
-
 }

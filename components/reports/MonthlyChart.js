@@ -1,21 +1,17 @@
 import React, { Component, PropTypes } from 'react'
-import $ from 'jquery';
 var Chart = require('react-google-charts').Chart;
-import * as actions from '../../actions';
 
 
 class MonthlyChart extends Component {
 
-    componentDidMount() {
-        actions.getMonthlyChart();
-    };
-
     render() {
-        return true ?
+        const { data } = this.props;
+        return data ?
             <div>
                 <h2 style={{textAlign:'center'}}>Daily Consumptions Chart</h2>
-                <Chart chartType={this.state.chart.chartType}
-                    rows={this.state.chart.rows}
+                <Chart
+                    columns={data.columns}
+                    rows={data.rows}
                     options={{
                         curveType: 'function',
                         title: 'Your Consumptions',
@@ -26,7 +22,8 @@ class MonthlyChart extends Component {
                     height={500}
                     graph_id={'chart'}
                 />
-            </div> :
+            </div>
+        :
             <div>
                 <h2 style={{textAlign:'center'}}>No data</h2>
             </div>

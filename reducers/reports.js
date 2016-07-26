@@ -1,11 +1,16 @@
-import { INIT_BUDGET, SET_BUDGET } from '../constants/ActionTypes'
+import { INIT_MONTHLY_CHART } from '../constants/ActionTypes'
 
-let initialState = {};
+let initialState = {
+    monthlyChart: null
+};
 
-export default function budget(state = initialState, action) {
+export default function reports(state = initialState, action) {
     switch (action.type) {
-        case INIT_BUDGET:
-            return action.budget;
+        case INIT_MONTHLY_CHART:
+            return {
+                ...state,
+                monthlyChart: action.data
+            };
 
         default:
             return state

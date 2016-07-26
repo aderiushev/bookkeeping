@@ -7,18 +7,40 @@ import MonthlyChart from '../components/reports/MonthlyChart';
 import MonthlyTable from '../components/reports/MonthlyTable';
 import MonthlyConsOnCat from '../components/reports/MonthlyByCategory';
 import RangeCalendar from '../components/reports/RangeCalendar';
+import {connect} from 'react-redux';
+import * as actions from '../actions';
+
 
 class Reports extends Component {
+
+    static propTypes = {
+        reports: PropTypes.object
+    };
+
+    componentDidMount() {
+        const { dispatch } = this.props;
+        dispatch(actions.getMonthlyChart());
+    }
+
     render() {
+        const { reports } = this.props;
+        console.warn(reports);
         return (
             <div>
                 <RangeCalendar />
-                <MonthlyChart />
+                <MonthlyChart data={reports.monthlyChart} />
                 <MonthlyTable />
                 <MonthlyConsOnCat />
             </div>
         )
     };
-};
+}
 
-export default Reports
+function mapStateToProps(state) {
+    const {reports} = state;
+
+    return {reports};
+}
+
+export default connect(mapStateToProps)(Reports);
+
