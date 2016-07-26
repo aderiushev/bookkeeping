@@ -12,29 +12,12 @@ import {
     red500
 } from 'material-ui/lib/styles/colors';
 
-import $ from 'jquery';
-
-const MonthlyTable = React.createClass({
-
-    getInitialState: function() {
-        let rows = [];
-
-        $.ajax({
-            url: '/monthly-table',
-            type: 'GET',
-            async: false,
-            success: function(data) {
-                rows = data;
-            }
-        });
-
-        return {
-            rows
-        };
-    },
+class MonthlyTable extends Component {
 
     render() {
-        return this.state.rows.length ?
+        const { data } = this.props;
+
+        return data ?
             <div>
                 <h2 style={{textAlign:'center'}}>Daily Consumptions Table:</h2>
                 <Table selectable={false}>
@@ -49,7 +32,7 @@ const MonthlyTable = React.createClass({
                     <TableBody
                         displayRowCheckbox={false}
                         showRowHover={true}>
-                        {this.state.rows.map((item, index) => (
+                        {data.rows.map((item, index) => (
                             <TableRow key={index} selected={false}>
                                 <TableRowColumn>{item.date}</TableRowColumn>
                                 <TableRowColumn>{item.categories}</TableRowColumn>
@@ -61,16 +44,12 @@ const MonthlyTable = React.createClass({
                         ))}
                     </TableBody>
                 </Table>
-            </div> :
+            </div>
+        :
             <div>
                 <h2 style={{textAlign:'center'}}>No data</h2>
             </div>
     }
-});
-
-MonthlyTable.contextTypes = {
-    store: React.PropTypes.object,
-    muiTheme: React.PropTypes.object
-};
+}
 
 export default MonthlyTable

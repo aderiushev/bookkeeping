@@ -12,37 +12,23 @@ import {
     red500
 } from 'material-ui/lib/styles/colors';
 
-import $ from 'jquery';
 
-const MonthlyByCategory = React.createClass({
-
-    getInitialState: function() {
-        let rows = [];
-
-        $.ajax({
-            url: '/monthly-by-category',
-            type: 'GET',
-            async: false,
-            success: function(data) {
-                rows = data;
-            }
-        });
-
-        return {
-            rows
-        };
-    },
+class  MonthlyByCategory extends Component {
 
     render() {
+        const { data } = this.props;
         let max = 0;
-        this.state.rows.forEach(item => max += item.sum);
 
-        return this.state.rows.length ?
+        if (data) {
+            data.rows.forEach(item => max += item.sum);
+        }
+
+        return data ?
             <div>
                 <h2 style={{textAlign:'center'}}>Consumptions on Categories</h2>
                 <Table selectable={false}>
                     <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
-                         <TableRow >
+                         <TableRow>
                             <TableHeaderColumn tooltip="Category">Category</TableHeaderColumn>
                             <TableHeaderColumn tooltip="Sum">Sum</TableHeaderColumn>
                              <TableHeaderColumn tooltip="Percentage">Percentage</TableHeaderColumn>
@@ -51,7 +37,7 @@ const MonthlyByCategory = React.createClass({
                     <TableBody
                         displayRowCheckbox={false}
                         showRowHover={true}>
-                        {this.state.rows.map((item, index) => (
+                        {data.rows.map((item, index) => (
                             <TableRow key={index} selected={false}>
                                 <TableRowColumn>{item.name}</TableRowColumn>
                                 <TableRowColumn>{item.sum}</TableRowColumn>
@@ -60,11 +46,12 @@ const MonthlyByCategory = React.createClass({
                         ))}
                     </TableBody>
                 </Table>
-            </div> :
+            </div>
+        :
             <div>
                 <h2 style={{textAlign:'center'}}>No data</h2>
             </div>
     }
-});
+}
 
 export default MonthlyByCategory

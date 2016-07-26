@@ -6,6 +6,7 @@ class MonthlyChart extends Component {
 
     render() {
         const { data } = this.props;
+
         return data ?
             <div>
                 <h2 style={{textAlign:'center'}}>Daily Consumptions Chart</h2>

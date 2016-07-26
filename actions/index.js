@@ -205,7 +205,43 @@ export function getMonthlyChart() {
         type: types.INIT_MONTHLY_CHART,
         data: {
             columns: [{label: 'Date', type: 'string'}].concat(columns),
-            rows: rows
+            rows
         }
+    };
+}
+
+export function getMonthlyTable() {
+    let rows = [];
+
+    $.ajax({
+        url: '/monthly-table',
+        type: 'GET',
+        async: false,
+        success: function(data) {
+            rows = data;
+        }
+    });
+
+    return {
+        type: types.INIT_MONTHLY_TABLE,
+        data: {rows}
+    };
+}
+
+export function getMonthlyByCategory() {
+    let rows = [];
+
+    $.ajax({
+        url: '/monthly-by-category',
+        type: 'GET',
+        async: false,
+        success: function(data) {
+            rows = data;
+        }
+    });
+
+    return {
+        type: types.INIT_MONTHLY_BY_CATEGORY,
+        data: {rows}
     };
 }

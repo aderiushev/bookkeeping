@@ -20,17 +20,19 @@ class Reports extends Component {
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch(actions.getMonthlyChart());
+        dispatch(actions.getMonthlyTable());
+        dispatch(actions.getMonthlyByCategory());
     }
 
     render() {
         const { reports } = this.props;
-        console.warn(reports);
+
         return (
             <div>
                 <RangeCalendar />
                 <MonthlyChart data={reports.monthlyChart} />
-                <MonthlyTable />
-                <MonthlyConsOnCat />
+                <MonthlyTable data={reports.monthlyTable} />
+                <MonthlyConsOnCat data={reports.monthlyByCategory}/>
             </div>
         )
     };
