@@ -13,13 +13,13 @@ const ConsumptionAdd = React.createClass({
     getInitialState() {
         return {
             category_id: null,
-            sum: 100000,
+            sum: 10,
             comment: ''
         };
     },
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.categories instanceof Array && nextProps.categories.length) {
+        if (nextProps.categories instanceof Array && nextProps.categories.length && !this.state.category_id) {
             this.setState({category_id: nextProps.categories[0].id});
         }
     },
