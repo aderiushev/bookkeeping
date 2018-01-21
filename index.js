@@ -19,10 +19,12 @@ import Consumptions from './containers/Consumptions'
 import Categories from './containers/Categories'
 import Settings from './containers/Settings'
 
+import thunk from 'redux-thunk';
+
 var injectTapEventPlugin = require("react-tap-event-plugin");
 injectTapEventPlugin();
 
-const middleware = process.env.NODE_ENV === 'production' ? [] : [logger()];
+const middleware = process.env.NODE_ENV === 'production' ? [thunk] : [logger(), thunk];
 
 const reducers = combineReducers({
     consumptions,

@@ -1,56 +1,87 @@
-import React, { Component, PropTypes } from 'react'
-import SelectField from 'material-ui/lib/select-field';
-import MenuItem from 'material-ui/lib/menus/menu-item'
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import ContentAdd from 'material-ui/lib/svg-icons/content/add';
-import ContentRemove from 'material-ui/lib/svg-icons/content/remove';
-import TextField from 'material-ui/lib/text-field';
-import $ from 'jquery';
+import React, { Component, PropTypes } from 'react';
+import Button from 'material-ui/Button';
+import AddIcon from 'material-ui-icons/Add';
+import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
+import TextField from 'material-ui/TextField';
+import { withStyles } from 'material-ui/styles';
+import { FormControl, FormHelperText } from 'material-ui/Form';
 
 import {
-    blue500, red500
-} from 'material-ui/lib/styles/colors';
+  blue500, red500,
+} from 'material-ui/colors';
 
-const BudgetManage = React.createClass({
-
-    getDefaultProps() {
-        return {
-            budget: {
-                sum: 0,
-                date: null,
-                comment: ''
-            }
-        }
-    },
-
-    setBudget(event) {
-        let sum = document.getElementById('sum').value;
-        let comment = document.getElementById('comment').value;
-
-        this.props.setBudget(sum, comment);
-        this.props.updateMoneyLeft();
-    },
-
-    render() {
-        const { budget } = this.props;
-        let budgetInfo = budget.sum === 0 ? (<h2 style={{color:red500}}>Budget not set</h2>) : (<h2>Budget for {budget.date}: {budget.sum}</h2>);
-
-        return (
-            <div style={{textAlign:'center', padding:40}}>
-                {budgetInfo}
-                <TextField id="sum" inputStyle={{textAlign:'center'}} style={{width:200}} hintText='Sum' />
-                <TextField id="comment" inputStyle={{textAlign:'center'}} defaultValue={budget.comment} style={{width:400}} hintText='Comment' />
-                <FloatingActionButton backgroundColor={blue500} style={{marginTop:20}} onClick={this.setBudget}>
-                    <ContentAdd />
-                </FloatingActionButton>
-            </div>
-        )
-    }
+const styles = theme => ({
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: 300,
+    margin: '0 auto',
+    padding: theme.spacing.unit * 2,
+    borderRadius: 16
+  },
+  field: {
+    marginBottom: theme.spacing.unit * 2
+  },
+  submitBtn: {
+    margin: '0 auto'
+  }
 });
 
+
+class BudgetManage extends Component {
+
+  state = {
+    sum: null,
+    comment: null
+  }
+
+  onChangeSum = (e) => {
+    this.setState({ sum: e.target.value })
+  }
+
+  onChangeComment = (e) => {
+    this.setState({ comment: e.target.value })
+  } 
+
+  setBudget = (event) => {
+    const { sum, comment } = this.state
+
+    this.props.setBudget(sum, comment);
+    this.props.updateMoneyLeft();
+  }
+
+  render() {
+    const { budget, classes } = this.props;
+
+    return (
+      <div className={classes.form}>
+
+        <FormControl className={classes.field}>
+          <InputLabel>Budget</InputLabel>
+          <Input
+            onChange={this.onChangeSum}
+            startAdornment={<InputAdornment position="start">+</InputAdornment>}
+          />
+        </FormControl>
+
+        <FormControl className={classes.field}>
+          <TextField
+            placeholder="Comment"
+            onChange={this.onChangeComment}
+          />
+        </FormControl>
+
+        <Button fab color="accent" onClick={this.setBudget} className={classes.submitBtn}>
+          <AddIcon />
+        </Button>
+      </div>
+    );
+  }
+}
+
 BudgetManage.propTypes = {
-    setBudget: PropTypes.func.isRequired
+  setBudget: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
-
-export default BudgetManage
+export default withStyles(styles)(BudgetManage);

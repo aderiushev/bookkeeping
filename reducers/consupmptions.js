@@ -9,7 +9,7 @@ export default function consumptions(state = initialState, action) {
 
         case CREATE_CONSUMPTION:
             return [
-                action.lastRow,
+                action.data,
                 ...state
             ];
 

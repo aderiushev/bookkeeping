@@ -1,247 +1,249 @@
-import * as types from '../constants/ActionTypes'
+import * as types from '../constants/ActionTypes';
 import $ from 'jquery';
+import request from 'superagent'
+
 
 export function initConsumptions() {
-    let consumptions = [];
-    $.ajax({
-        url: '/consumptions',
-        type: 'GET',
-        async: false,
-        success: function(data) {
-            consumptions = data;
-        }
-    });
+  let consumptions = [];
+  $.ajax({
+    url: '/consumptions',
+    type: 'GET',
+    async: false,
+    success(data) {
+      consumptions = data;
+    },
+  });
 
-    return { type: types.INIT_CONSUMPTIONS, consumptions: consumptions }
+  return { type: types.INIT_CONSUMPTIONS, consumptions };
 }
 
 export function initCategories() {
-    let categories = [];
-    $.ajax({
-        url: '/categories',
-        type: 'GET',
-        async: false,
-        success: function(data) {
-            categories = data;
-        }
-    });
+  let categories = [];
+  $.ajax({
+    url: '/categories',
+    type: 'GET',
+    async: false,
+    success(data) {
+      categories = data;
+    },
+  });
 
-    return { type: types.INIT_CATEGORIES, categories: categories }
+  return { type: types.INIT_CATEGORIES, categories };
 }
 
 export function initBudget() {
-    let budget = {};
+  let budget = {};
 
-    $.ajax({
-        url: '/current-budget',
-        type: 'GET',
-        async: false,
-        success: function(data) {
-            budget = data;
-        }
-    });
+  $.ajax({
+    url: '/current-budget',
+    type: 'GET',
+    async: false,
+    success(data) {
+      budget = data;
+    },
+  });
 
-    return { type: types.INIT_BUDGET, budget }
+  return { type: types.INIT_BUDGET, budget };
 }
 
 
 export function createConsumption(category_id, sum, comment, budget_id) {
-    let lastRow = {};
-    $.ajax({
-        url: '/consumptions',
-        type: 'POST',
-        async: false,
-        data: {
-            category_id,
-            budget_id,
-            sum,
-            comment
-        },
-        success(data) {
-            //@TODO: process errors
-            lastRow = data
-        }
-    });
-
-    return { type: types.CREATE_CONSUMPTION, lastRow: lastRow }
-
+  return (dispatch, getState) => {
+    return request('POST', '/consumptions')
+      .send({
+        category_id,
+        budget_id,
+        sum,
+        comment
+      })
+      .then(response => {
+        dispatch({
+          type: types.CREATE_CONSUMPTION,
+          data: response.body
+        })
+    })
+  }
 }
 
 export function updateConsumption(consumption_id, sum, comment) {
-    $.ajax({
-        url: '/consumptions',
-        type: 'PUT',
-        async: false,
-        data: {
-            id: consumption_id,
-            sum: sum,
-            comment: comment
-        },
-        success(data) {
-            //@TODO: process errors
-        }
-    });
+  $.ajax({
+    url: '/consumptions',
+    type: 'PUT',
+    async: false,
+    data: {
+      id: consumption_id,
+      sum,
+      comment,
+    },
+    success(data) {
+      // @TODO: process errors
+    },
+  });
 
-    return { type: types.UPDATE_CONSUMPTION, consumption_id, sum, comment }
+  return {
+    type: types.UPDATE_CONSUMPTION, consumption_id, sum, comment,
+  };
 }
 
 export function updateCategory(category_id, name) {
-    $.ajax({
-        url: '/categories',
-        type: 'PUT',
-        async: false,
-        data: {
-            id: category_id,
-            name: name
-        },
-        success(data) {
-            //@TODO: process errors
-        }
-    });
+  $.ajax({
+    url: '/categories',
+    type: 'PUT',
+    async: false,
+    data: {
+      id: category_id,
+      name,
+    },
+    success(data) {
+      // @TODO: process errors
+    },
+  });
 
-    return { type: types.UPDATE_CATEGORY, category_id, name }
+  return { type: types.UPDATE_CATEGORY, category_id, name };
 }
 
 
 export function deleteConsumption(consumption_id) {
-    $.ajax({
-        url: '/consumptions',
-        type: 'DELETE',
-        async: false,
-        data: {
-            id: consumption_id
-        },
-        success(data) {
-            //@TODO: process errors
-        }
-    });
+  $.ajax({
+    url: '/consumptions',
+    type: 'DELETE',
+    async: false,
+    data: {
+      id: consumption_id,
+    },
+    success(data) {
+      // @TODO: process errors
+    },
+  });
 
-    return { type: types.DELETE_CONSUMPTION, consumption_id }
+  return { type: types.DELETE_CONSUMPTION, consumption_id };
 }
 
 export function createCategory(name) {
-    let lastRow = {};
-    $.ajax({
-        url: '/categories',
-        type: 'POST',
-        async: false,
-        data: {
-            name: name
-        },
-        success(data) {
-            //@TODO: process errors
-            lastRow = data;
-        }
+  return (dispatch, getState) => {
+    return $.ajax({
+      url: '/categories',
+      type: 'POST',
+      data: {
+        name,
+      },
+      success: (data) => {
+        return dispatch({ type: types.CREATE_CATEGORY, lastRow: data });
+      },
+      error: (data) => {
+        return dispatch({ type: null });
+      }
     });
-
-    return { type: types.CREATE_CATEGORY, lastRow: lastRow }
+  }
 }
 
 
 export function deleteCategory(category_id) {
-    $.ajax({
-        url: '/categories',
-        type: 'DELETE',
-        async: false,
-        data: {
-            id: category_id
-        },
-        success(data) {
-            //@TODO: process errors
-        }
-    });
+  $.ajax({
+    url: '/categories',
+    type: 'DELETE',
+    async: false,
+    data: {
+      id: category_id,
+    },
+    success(data) {
+      // @TODO: process errors
+    },
+  });
 
-    return { type: types.DELETE_CATEGORY, category_id }
+  return { type: types.DELETE_CATEGORY, category_id };
 }
 
 export function setBudget(sum, comment) {
-    var lastRow = {};
+  let lastRow = {};
 
-    $.ajax({
-        url: '/budget',
-        type: 'POST',
-        async: false,
-        data: {
-            sum: sum,
-            comment: comment
-        },
-        success(data) {
-            lastRow = data
-        }
-    });
+  $.ajax({
+    url: '/budget',
+    type: 'POST',
+    async: false,
+    data: {
+      sum,
+      comment,
+    },
+    success(data) {
+      lastRow = data;
+    },
+  });
 
-    return { type: types.SET_BUDGET, lastRow}
+  return { type: types.SET_BUDGET, lastRow };
 }
 
 export function updateMoneyLeft() {
-    var moneyLeft = {};
+  let moneyLeft = {};
 
-    $.ajax({
-        url: '/money-left',
-        type: 'GET',
-        async: false,
-        success: function(data) {
-            moneyLeft = data.moneyLeft;
-        }
-    });
+  $.ajax({
+    url: '/money-left',
+    type: 'GET',
+    async: false,
+    success(data) {
+      moneyLeft = data.moneyLeft;
+    },
+  });
 
-    return { type: types.UPDATE_MONEY_LEFT, moneyLeft }
+  return { type: types.UPDATE_MONEY_LEFT, moneyLeft };
 }
 
-export function getMonthlyChart() {
-    let columns = [];
-    let rows = [];
-    $.ajax({
-        url: '/monthly-chart',
-        type: 'GET',
-        async: false,
-        success: function(data) {
-            columns = data.columns;
-            rows = data.rows;
-        }
-    });
-
-    return {
-        type: types.INIT_MONTHLY_CHART,
-        data: {
-            columns: [{label: 'Date', type: 'string'}].concat(columns),
-            rows
-        }
-    };
+export function getMonthlyChart({ startDate, endDate }) {
+  return (dispatch, getState) => {
+    return request('GET', '/monthly-chart')
+      .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD')  })
+      .then(response => {
+        dispatch({
+          type: types.INIT_MONTHLY_CHART,
+          data: {
+            columns: [{ label: 'Date', type: 'string' }].concat(response.body.columns),
+            rows: response.body.rows
+          }
+        })
+    })
+  }
 }
 
-export function getMonthlyTable() {
-    let rows = [];
-
-    $.ajax({
-        url: '/monthly-table',
-        type: 'GET',
-        async: false,
-        success: function(data) {
-            rows = data;
-        }
-    });
-
-    return {
-        type: types.INIT_MONTHLY_TABLE,
-        data: {rows}
-    };
+export function getMonthlyTable({ startDate, endDate }) {
+  return (dispatch, getState) => {
+    return request('GET', '/monthly-table')
+      .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD')  })
+      .then(response => {
+        dispatch({
+          type: types.INIT_MONTHLY_TABLE,
+          data: response.body
+        })
+    })
+  }
 }
 
-export function getMonthlyByCategory() {
-    let rows = [];
 
-    $.ajax({
-        url: '/monthly-by-category',
-        type: 'GET',
-        async: false,
-        success: function(data) {
-            rows = data;
-        }
-    });
-
-    return {
-        type: types.INIT_MONTHLY_BY_CATEGORY,
-        data: {rows}
-    };
+export function getMonthlyByCategory({ startDate, endDate }) {
+  return (dispatch, getState) => {
+    return request('GET', '/monthly-by-category')
+      .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD')  })
+      .then(response => {
+        dispatch({
+          type: types.INIT_MONTHLY_BY_CATEGORY,
+          data: response.body
+        })
+    })
+  }
 }
+
+export function getBudgetChart({ startDate, endDate }) {
+  return (dispatch, getState) => {
+    return request('GET', '/budget-chart')
+      .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD')  })
+      .then(response => {
+        dispatch({
+          type: types.INIT_BUDGET_CHART,
+          data: {
+            columns: [{ label: 'Date', type: 'string' }].concat(response.body.columns),
+            rows: response.body.rows
+          }
+        })
+    })
+  }
+}
+

@@ -1,47 +1,83 @@
-import React, { Component, PropTypes } from 'react'
-import SelectField from 'material-ui/lib/select-field';
-import MenuItem from 'material-ui/lib/menus/menu-item'
-import FloatingActionButton from 'material-ui/lib/floating-action-button';
-import ContentAdd from 'material-ui/lib/svg-icons/content/add';
-import TextField from 'material-ui/lib/text-field';
-import $ from 'jquery';
+import React, { Component, PropTypes } from 'react';
+import Button from 'material-ui/Button';
+import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+import AddIcon from 'material-ui-icons/Add';
+import { FormControl, FormHelperText } from 'material-ui/Form';
+import { withStyles } from 'material-ui/styles';
+import backgroundImage from './../assets/images/bar-montenegro.jpg'
 
+const styles = theme => ({
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
+    width: 300,
+    margin: '0 auto',
+    padding: theme.spacing.unit * 2,
+    borderRadius: 16,
+    backgroundColor: theme.palette.grey['50'],
+    opacity: .95
+  },
+  field: {
+    marginBottom: theme.spacing.unit * 2
+  },
+  submitBtn: {
+    margin: '0 auto'
+  },
+  wrapper: {
+    background: `url(${backgroundImage})`,
+    backgroundSize: 'cover',
+    padding: theme.spacing.unit * 2,
+    backgroundPosition: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    height: 300
+  }
+});
 
 class CategoryAdd extends Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props) {
-        super(props);
+    this.state = {
+      name: '',
+    };
+  }
 
-        this.state = {
-            name: 'Новая категория'
-        };
-    }
+  createCategory = (event) => {
+    this.props.createCategory(this.state.name);
+  }
 
-    createCategory(event) {
-        this.props.createCategory(this.state.name);
-    }
+  changeName = (event) => {
+    this.setState({ name: event.target.value });
+  }
 
-    changeName(event) {
-        this.setState({name:event.target.value})
-    }
+  render() {
+    const { classes } = this.props
 
-    render() {
-
-        return (
-            <div style={{textAlign:'center', padding:40}}>
-                <TextField inputStyle={{textAlign:'center'}} defaultValue={this.state.name} onChange={this.changeName.bind(this)} style={{width:300}} hintText='Name' />
-                <br />
-                <FloatingActionButton style={{marginTop:20}} onClick={this.createCategory.bind(this)}>
-                    <ContentAdd addConsumption />
-                </FloatingActionButton>
-            </div>
-        )
-    }
+    return (
+      <div className={classes.wrapper}>
+        <Paper className={classes.form}>
+          <FormControl className={classes.field}>
+            <TextField
+              style={{ textAlign: 'center' }}
+              defaultValue={this.state.name}
+              onChange={this.changeName}
+              placeholder="Category name"
+            />
+          </FormControl>
+          <Button fab color="accent" onClick={this.createCategory} className={classes.submitBtn}>
+            <AddIcon />
+          </Button>
+        </Paper>
+      </div>
+    );
+  }
 }
 
 CategoryAdd.propTypes = {
-    createCategory: PropTypes.func.isRequired
+  createCategory: PropTypes.func.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
-
-export default CategoryAdd
+export default withStyles(styles)(CategoryAdd);

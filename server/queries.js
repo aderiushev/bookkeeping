@@ -2,10 +2,11 @@ module.exports = (db) => {
     return {
         common: {
             moneyLeft: () => {
-                return `SELECT COALESCE(budget.sum, 0) - COALESCE(sum(consumption.sum), 0) as moneyLeft from budget
-                    LEFT JOIN consumption on consumption.budget_id  = budget.id
-                    ORDER BY budget.ts DESC
-                    LIMIT 1`;
+                return `SELECT COALESCE(SUM(b.sum), 0) - 
+                    (
+                        SELECT COALESCE(SUM(c.sum), 0) 
+                        FROM consumption c
+                    ) moneyLeft FROM budget b`;
             },
             monthInfo: () => {
                 return `SELECT date('now', 'start of month') AS start_month,
@@ -59,8 +60,26 @@ module.exports = (db) => {
                     FROM consumption cons
                     INNER JOIN category cat ON cat.id = cons.category_id
                     WHERE cons.ts >= ?
-                    AND cons.ts < ?
+                    AND strftime('%Y-%m-%d', cons.ts) <= ?
                     GROUP BY date, cat_id ORDER BY date`;
+            },
+            budgetChart: { 
+                consumption: () => {
+                    return `SELECT SUM(c.sum) sum, strftime('%d.%m',  c.ts)  date
+                        FROM consumption c
+                        WHERE c.ts >= ?
+                        AND strftime('%Y-%m-%d', c.ts) <= ?
+                        GROUP by date
+                        ORDER BY date`
+                },
+                budget: () => {
+                    return `
+                        SELECT b.sum sum, strftime('%d.%m',  b.ts) date
+                        FROM budget b
+                        WHERE b.ts >= ?
+                        AND strftime('%Y-%m-%d', b.ts) <= ?
+                        GROUP BY date`
+                }             
             },
             monthlyTable: () => {
                 return `SELECT strftime('%d.%m', cons.ts) AS date,
@@ -70,14 +89,14 @@ module.exports = (db) => {
                     FROM consumption cons
                     INNER JOIN category cat ON cat.id = cons.category_id
                     WHERE cons.ts >= ?
-                    AND cons.ts < ?
+                    AND strftime('%Y-%m-%d', cons.ts) <= ?
                     GROUP BY date ORDER BY date DESC`;
             },
             byCategory: () => {
                 return `SELECT COALESCE(sum(consumption.sum), 0) as sum, category.name from consumption
                     INNER JOIN category on category.id = consumption.category_id
-                    WHERE consumption.ts >= date('now', 'start of month')
-                    AND consumption.ts < date('now','start of month','+1 month')
+                    WHERE consumption.ts >= ?
+                    AND strftime('%Y-%m-%d', consumption.ts) <= ?
                     GROUP BY category.id
                     ORDER BY sum DESC`
             }
@@ -87,20 +106,20 @@ module.exports = (db) => {
                 return "INSERT INTO budget(sum, comment) VALUES(?, ?)";
             },
             readById: () => {
-                return "SELECT COALESCE(sum, 0) as sum, strftime('%m.%Y', 'now') date, comment from budget WHERE budget.id = ?";
+                return "SELECT COALESCE(sum, 0) as sum, comment from budget WHERE budget.id = ?";
             },
             current: () => {
-                return "SELECT id, COALESCE(sum, 0) as sum, strftime('%m.%Y', 'now') date, comment from budget " +
+                return "SELECT id, COALESCE(sum, 0) as sum, comment from budget " +
                     "WHERE ts >= date('now', 'start of month') " +
                     "AND ts <  date('now','start of month','+1 month') " +
                     "ORDER BY ts DESC LIMIT 1";
             },
-            currentPerDay: () => {
-                return "SELECT COALESCE(sum, 0) / strftime('%d', date('now','start of month','+1 month', '-1 day')) as budget_per_day from budget " +
-                    "WHERE ts >= date('now', 'start of month') " +
-                    "AND ts < date('now','start of month','+1 month') " +
-                    "ORDER BY ts DESC LIMIT 1";
-            }
+            // currentPerDay: () => {
+            //     return "SELECT COALESCE(sum, 0) / strftime('%d', date('now','start of month','+1 month', '-1 day')) as budget_per_day from budget " +
+            //         "WHERE ts >= date('now', 'start of month') " +
+            //         "AND ts < date('now','start of month','+1 month') " +
+            //         "ORDER BY ts DESC LIMIT 1";
+            // }
         }
     }
 };

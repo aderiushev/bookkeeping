@@ -1,9 +1,10 @@
-import { INIT_MONTHLY_CHART, INIT_MONTHLY_TABLE, INIT_MONTHLY_BY_CATEGORY } from '../constants/ActionTypes'
+import { INIT_MONTHLY_CHART, INIT_MONTHLY_TABLE, INIT_MONTHLY_BY_CATEGORY, INIT_BUDGET_CHART } from '../constants/ActionTypes'
 
 let initialState = {
     monthlyChart: null,
     monthlyTable: null,
-    monthlyByCategory: null
+    monthlyByCategory: null,
+    budgetChart: null
 };
 
 export default function reports(state = initialState, action) {
@@ -23,7 +24,11 @@ export default function reports(state = initialState, action) {
                 ...state,
                 monthlyByCategory: action.data
             };
-
+        case INIT_BUDGET_CHART:
+            return {
+                ...state,
+                budgetChart: action.data
+            };
         default:
             return state
     }

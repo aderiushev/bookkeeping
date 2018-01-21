@@ -1,28 +1,88 @@
-import React, { PropTypes, Component } from 'react'
-import AppBar from 'material-ui/lib/app-bar';
-import RaisedButton from 'material-ui/lib/raised-button';
-import { Link, browserHistory } from 'react-router'
-import ShoppingCartItemAddIcon from 'material-ui/lib/svg-icons/action/add-shopping-cart';
-import ListItemIcon from 'material-ui/lib/svg-icons/action/list';
-import DeveloperBoardIcon from 'material-ui/lib/svg-icons/hardware/developer-board';
-import BuildIcon from 'material-ui/lib/svg-icons/action/build';
-import IconButton from 'material-ui/lib/icon-button';
+import React, { PropTypes, Component } from 'react';
+import AppBar from 'material-ui/AppBar';
+import Button from 'material-ui/Button';
+import { browserHistory } from 'react-router';
+import ShoppingCartItemAddIcon from 'material-ui-icons/ShoppingCart';
+import AssignmentIcon from 'material-ui-icons/Assignment';
+import TrendingUpIcon from 'material-ui-icons/TrendingUp';
+import BuildIcon from 'material-ui-icons/Build';
 import MoneyLeft from '../components/MoneyLeft';
+import Toolbar from 'material-ui/Toolbar';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
 
+const styles = theme => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+  buttonIcon: {
+    marginRight: theme.spacing.unit,
+  },
+});
 
 class Header extends Component {
+  render() {
+    const { classes } = this.props;
 
-    render() {
-        return (
-            <AppBar iconElementLeft={<MoneyLeft />}
-                    title={"Bookkeeping Service"} titleStyle={{paddingLeft:30}}>
-                <RaisedButton icon={<ShoppingCartItemAddIcon />} onClick={() => browserHistory.push('/')} label="Consumptions" style={{margin:15}} />
-                <RaisedButton icon={<ListItemIcon />} onClick={() => browserHistory.push('/categories-page')} label="Categories" style={{margin:15}} />
-                <RaisedButton icon={<DeveloperBoardIcon />} onClick={() => browserHistory.push('/reports-page')} label="Reports" style={{margin:15}} />
-                <RaisedButton icon={<BuildIcon />} onClick={() => browserHistory.push('/settings-page')} label="Settings" style={{margin:15}} />
-            </AppBar>
-        )
-    }
+    return (
+      <AppBar
+        titleStyle={{ paddingLeft: 30 }}
+      >
+        <Toolbar>
+          <Typography type="title" color="inherit">
+            Bookkeeping Service
+          </Typography>
+
+          <Button
+            className={classes.button}
+            color="contrast"
+            onClick={() => browserHistory.push('/')}
+          >
+            <ShoppingCartItemAddIcon
+              className={classes.buttonIcon}
+            />
+              Consumptions
+          </Button>
+          <Button
+            className={classes.button}
+            color="contrast"
+            onClick={() => browserHistory.push('/categories-page')}
+          >
+            <AssignmentIcon
+              className={classes.buttonIcon}
+            />
+              Categories
+          </Button>
+          <Button
+            className={classes.button}
+            color="contrast"
+            onClick={() => browserHistory.push('/reports-page')}
+          >
+            <TrendingUpIcon
+              className={classes.buttonIcon}
+            />
+              Reports
+          </Button>
+          <Button
+            className={classes.button}
+            color="contrast"
+            onClick={() => browserHistory.push('/settings-page')}
+          >
+            <BuildIcon
+              className={classes.buttonIcon}
+            />
+              Settings
+          </Button>
+
+          <MoneyLeft />
+        </Toolbar>
+      </AppBar>
+    );
+  }
 }
 
-export default Header
+Header.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Header);

@@ -1,15 +1,18 @@
 import React, { Component, PropTypes } from 'react';
 
+//const Chart = require('react-google-charts').Chart;
 import { Chart } from 'react-google-charts'
 
-class MonthlyChart extends Component {
+class BudgetChart extends Component {
   render() {
     const { data } = this.props;
+
+    console.warn('data', data)
 
     return (
       <div>
         <h2 style={{ textAlign: 'center' }}>
-          Daily Consumptions Chart
+          Budget Chart
         </h2>
         {data && !!data.rows.length
           ?
@@ -17,13 +20,14 @@ class MonthlyChart extends Component {
               columns={data.columns}
               rows={data.rows}
               options={{
-                  title: 'Your Consumptions',
+              
+                  title: 'Your budget changes',
                   hAxis: { title: 'Day' },
-                  vAxis: { title: 'Sum' },
+                  vAxis: { title: 'Budget' },
               }}
               chartType="LineChart"
               height={500}
-              graph_id="monthlyChart"
+              graph_id="budgetChart"
             />
           :
             <div>
@@ -35,4 +39,4 @@ class MonthlyChart extends Component {
   }
 }
 
-export default MonthlyChart;
+export default BudgetChart;

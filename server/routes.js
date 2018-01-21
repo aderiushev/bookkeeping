@@ -1,4 +1,5 @@
 module.exports = (app, db) => {
+    var moment = require('moment')
     var queries = require('./queries')(db);
 
     app.get(['/', '/reports-page', '/categories-page', '/settings-page'], function (req, res) {
@@ -112,65 +113,96 @@ module.exports = (app, db) => {
 
         var columnsTmp = [];
         var rowsTmp = [];
-        db.get(queries.common.monthInfo(), [], function (error, dateRow) {
-            db.all(queries.reports.monthlyChart(), [dateRow.start_month, dateRow.end_month], function (error, rows) {
-                if (!rows.length) {
-                    return res.json(reportData);
-                }
 
+        db.all(queries.reports.monthlyChart(), [req.query.startDate, req.query.endDate], function (error, rows) {
+            if (!rows.length) {
+                return res.json(reportData);
+            }
+
+            rows.map(function (item) {
+                if (columnsTmp.indexOf(item.cat_id) === -1) {
+                    reportData.columns.push({ label: item.cat_name, type: 'number' });
+                    columnsTmp.push(item.cat_id);
+                }
+            });
+
+            var currentDate = moment(req.query.startDate)
+            while (currentDate <= moment(req.query.endDate)) {
+                var rowTmp = new Array(columnsTmp.length + 1).fill(0)
+                rowTmp[0] = currentDate.format('DD.MM');
+                rowsTmp.push(rowTmp);
+                currentDate.add(1, 'day')
+            }
+
+            rowsTmp.map(function (rowTmp) {
                 rows.map(function (item) {
-                    if (columnsTmp.indexOf(item.cat_id) === -1) {
-                        reportData.columns.push({label: item.cat_name, type: 'number'});
-                        columnsTmp.push(item.cat_id);
+                    if (item.date == rowTmp[0]) {
+                        var columnIndex = columnsTmp.indexOf(item.cat_id);
+                        rowTmp[columnIndex + 1] = item.sum;
                     }
                 });
+            });
+            reportData.rows = rowsTmp;
 
-                var day = 1;
-                while (day <= dateRow.days_amount) {
-                    if (day > dateRow.now_day) {
-                        break;
+            res.json(reportData);
+        });
+    });
+
+    app.get("/budget-chart", function (req, res) {
+        var reportData = {columns: [], rows: []};
+
+        var columnsTmp = [];
+        var rowsTmp = [];
+
+        db.all(queries.reports.budgetChart.consumption(), [req.query.startDate, req.query.endDate], function (error, consumptionRows) {
+            db.all(queries.reports.budgetChart.budget(), [req.query.startDate, req.query.endDate], function (error, budgetRows) {
+                reportData = { columns: [], rows: []}
+                reportData.columns = [{ label: 'Budget', type: 'number' }];
+
+                var currentDate = moment(req.query.startDate)
+                var currentBudget = null
+                while (currentDate <= moment(req.query.endDate)) {
+                    var formattedDate = currentDate.format('DD.MM')
+                    currentBudget = budgetRows.find(budgetRow => budgetRow.date === formattedDate) || currentBudget
+                    
+                    if (currentBudget) {
+                        var currentConsumptions = consumptionRows.find(consumptionRow => consumptionRow.date === formattedDate) || 0
+                        if (currentConsumptions) {
+                           currentBudget = { sum: currentBudget.sum - currentConsumptions.sum }
+                        }
+                        rowsTmp.push([
+                            formattedDate,
+                            currentBudget.sum
+                        ]);   
                     }
-                    var rowTmp = Array.apply(null, Array(columnsTmp.length + 1)).map(Number.prototype.valueOf, 0);
-                    rowTmp[0] = ("0" + day).slice(-2) + '.' + ("0" + dateRow.now_month).slice(-2);
-                    rowsTmp.push(rowTmp);
-                    day++;
+
+                    currentDate.add(1, 'day')
                 }
 
-                rowsTmp.map(function (rowTmp) {
-                    rows.map(function (item) {
-                        if (item.date == rowTmp[0]) {
-                            var columnIndex = columnsTmp.indexOf(item.cat_id);
-                            rowTmp[columnIndex + 1] = item.sum;
-                        }
-                    });
-                });
-                reportData.rows = rowsTmp;
+                reportData.rows = rowsTmp
 
                 res.json(reportData);
-            });
+            })
         });
     });
 
     app.get("/monthly-table", function (req, res) {
         var reportData = [];
 
-        db.get(queries.common.monthInfo(), [], function (error, dateRow) {
-            db.all(queries.reports.monthlyTable(), [dateRow.start_month, dateRow.end_month], function (error, rows) {
-                if (!rows.length) {
-                    return res.json(reportData);
-                }
+        db.all(queries.reports.monthlyTable(), [req.query.startDate, req.query.endDate], function (error, rows) {
+            if (!rows.length) {
+                return res.json(reportData);
+            }
 
-                reportData = rows;
+            reportData = rows;
 
-                res.json(reportData);
-            });
+            res.json(reportData);
         });
-
     });
 
     app.get("/monthly-by-category", function (req, res) {
         var reportData = [];
-        db.all(queries.reports.byCategory(), [], function (error, rows) {
+        db.all(queries.reports.byCategory(), [req.query.startDate, req.query.endDate], function (error, rows) {
             reportData = rows;
             res.json(reportData);
         });
@@ -187,20 +219,20 @@ module.exports = (app, db) => {
         });
     });
 
-    app.get("/current-budget-per-day", function (req, res) {
-        db.all(queries.budget.currentPerDay(), [], function (error, rows) {
-            if (error) {
-                console.log(error);
-            } else {
-                if (rows[0]) {
-                    res.json(rows[0].budget_per_day);
-                }
-                else {
-                    res.json(0);
-                }
-            }
-        });
-    });
+    // app.get("/current-budget-per-day", function (req, res) {
+    //     db.all(queries.budget.currentPerDay(), [], function (error, rows) {
+    //         if (error) {
+    //             console.log(error);
+    //         } else {
+    //             if (rows[0]) {
+    //                 res.json(rows[0].budget_per_day);
+    //             }
+    //             else {
+    //                 res.json(0);
+    //             }
+    //         }
+    //     });
+    // });
 
     app.post("/budget", function (req, res) {
         if (req.body.sum) {

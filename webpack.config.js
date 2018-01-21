@@ -13,10 +13,10 @@ module.exports = {
         publicPath: '/static/'
     },
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': '"development"',
-            'process.env.BABEL_ENV': '"development'
-        }),
+        // new webpack.DefinePlugin({
+        //     'process.env.NODE_ENV': '"development"',
+        //     'process.env.BABEL_ENV': '"development'
+        // }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.optimize.DedupePlugin(),
@@ -37,7 +37,12 @@ module.exports = {
                 test: /\.css?$/,
                 loaders: [ 'style', 'raw' ],
                 include: __dirname
-            }
+            },
+
+{
+            test: /\.(png|jp(e*)g|svg)$/,  
+            loaders: ['url-loader?limit=8000&name=images/[hash]-[name].[ext]']
+        }
         ]
     }
 };
