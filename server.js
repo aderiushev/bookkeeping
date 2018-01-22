@@ -3,7 +3,7 @@ var logger = require('morgan');
 var bodyParser = require("body-parser");
 
 var app = new express();
-var port;
+var port = 8080;
 
 if (process.env.NODE_ENV === 'development') {
     var webpack = require('webpack');
@@ -15,13 +15,7 @@ if (process.env.NODE_ENV === 'development') {
     app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
     app.use(webpackHotMiddleware(compiler));
     app.use(logger('common'));
-
-    port = 8080;
-}
-
-if (process.env.NODE_ENV === 'production') {
-    port = 8000;
-}
+ }
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
