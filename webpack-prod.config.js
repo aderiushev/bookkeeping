@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var config = {
     devtool: 'eval',
@@ -12,6 +13,7 @@ var config = {
         publicPath: '/static/'
     },
     plugins: [
+        new CopyWebpackPlugin([{ from: 'favicon.ico', to: 'images/favicon.ico' }]),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.DedupePlugin(),
         new webpack.NoErrorsPlugin()

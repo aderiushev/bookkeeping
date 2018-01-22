@@ -1,6 +1,7 @@
 var path = require('path')
 var webpack = require('webpack')
 var WebpackBuildNotifierPlugin = require('webpack-build-notifier');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
@@ -14,10 +15,7 @@ module.exports = {
         publicPath: '/static/'
     },
     plugins: [
-        // new webpack.DefinePlugin({
-        //     'process.env.NODE_ENV': '"development"',
-        //     'process.env.BABEL_ENV': '"development'
-        // }),
+        new CopyWebpackPlugin([{ from: 'favicon.ico', to: 'images/favicon.ico' }]),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.optimize.DedupePlugin(),
