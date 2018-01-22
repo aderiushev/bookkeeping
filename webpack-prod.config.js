@@ -12,10 +12,6 @@ var config = {
         publicPath: '/static/'
     },
     plugins: [
-        // new webpack.DefinePlugin({
-        //     'process.env.NODE_ENV': JSON.stringify('production'),
-        //     'process.env.BABEL_ENV': JSON.stringify('production')
-        // }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.DedupePlugin(),
         new webpack.NoErrorsPlugin()
@@ -24,16 +20,22 @@ var config = {
         loaders: [
             {
                 test: /\.js$/,
-                loaders: ['babel'],
-                exclude: /node_modules/,
+                loader: 'babel-loader',
+                query: {
+                    presets: ['es2015', 'react', 'stage-1']
+                },
+                exclude: /(node_modules|bower_components)/,
                 include: __dirname
             },
             {
                 test: /\.css?$/,
                 loaders: [ 'style', 'raw' ],
                 include: __dirname
-            }
-        ]
+            },
+            {
+                test: /\.(png|jp(e*)g|svg)$/,  
+                loaders: ['url-loader?limit=8000&name=images/[hash]-[name].[ext]']
+            }        ]
     }
 };
 
