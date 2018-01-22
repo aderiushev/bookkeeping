@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "cross-env NODE_ENV=development webpack --watch",
+    "build:dev": "cross-env NODE_ENV=development webpack --watch",
     "server:dev": "cross-env NODE_ENV=development node server",
-    "start:prod": "cross-env NODE_ENV=production webpack --config webpack-prod.config.js",
-    "server:prod": "cross-env NODE_ENV=production pm2 start server",
+    "build:prod": "cross-env NODE_ENV=production webpack --config webpack-prod.config.js",
+    "server:prod": "cross-env NODE_ENV=production pm2 start server"
   },
   "repository": {
     "type": "git",
