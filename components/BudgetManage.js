@@ -17,7 +17,8 @@ const styles = theme => ({
     width: 300,
     margin: '0 auto',
     padding: theme.spacing.unit * 2,
-    borderRadius: 16
+    borderRadius: 16,
+    boxSizing: 'border-box'
   },
   field: {
     marginBottom: theme.spacing.unit * 2
@@ -26,7 +27,6 @@ const styles = theme => ({
     margin: '0 auto'
   }
 });
-
 
 class BudgetManage extends Component {
 
@@ -51,7 +51,7 @@ class BudgetManage extends Component {
   }
 
   render() {
-    const { budget, classes } = this.props;
+    const { classes } = this.props;
 
     return (
       <div className={classes.form}>

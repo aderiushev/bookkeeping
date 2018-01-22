@@ -1,10 +1,19 @@
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { withStyles } from 'material-ui/styles';
 import * as actions from '../actions';
 import ConsumptionAdd from '../components/ConsumptionAdd';
 import ConsumptionTable from '../components/ConsumptionTable';
 
+const styles = theme => ({
+  root: {
+
+  },
+  table: {
+    
+  },
+});
 
 const Consumptions = React.createClass({
 
@@ -18,11 +27,11 @@ const Consumptions = React.createClass({
 
   render() {
     const {
-      actions, consumptions, categories, budget,
+      actions, consumptions, categories, budget, classes
     } = this.props;
 
     return (
-      <div>
+      <div className={classes.root}>
         <ConsumptionAdd
           createConsumption={actions.createConsumption}
           updateMoneyLeft={actions.updateMoneyLeft}
@@ -30,6 +39,7 @@ const Consumptions = React.createClass({
           budget={budget}
         />
         <ConsumptionTable
+          className={classes.table}
           consumptions={consumptions}
           budget={budget}
           updateMoneyLeft={actions.updateMoneyLeft}
@@ -65,4 +75,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Consumptions);
+)(withStyles(styles)(Consumptions));

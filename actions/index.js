@@ -31,19 +31,16 @@ export function initCategories() {
   return { type: types.INIT_CATEGORIES, categories };
 }
 
-export function initBudget() {
-  let budget = {};
-
-  $.ajax({
-    url: '/current-budget',
-    type: 'GET',
-    async: false,
-    success(data) {
-      budget = data;
-    },
-  });
-
-  return { type: types.INIT_BUDGET, budget };
+export function getBudgetsList() {
+  return (dispatch, getState) => {
+    return request('GET', '/budgets')
+      .then(response => {
+        dispatch({
+          type: types.GET_BUDGETS_LIST,
+          data: response.body
+        })
+    })
+  }
 }
 
 

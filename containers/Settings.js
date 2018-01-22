@@ -4,24 +4,25 @@ import { connect } from 'react-redux';
 import * as actions from '../actions';
 
 import BudgetManage from '../components/BudgetManage';
+import BudgetTable from '../components/BudgetTable';
 
 class Settings extends Component {
   componentDidMount() {
     const { actions } = this.props;
 
-    actions.initBudget();
+    actions.getBudgetsList();
   }
 
   render() {
-    const { budget, actions } = this.props;
+    const { budgets, actions } = this.props;
 
     return (
       <div>
         <BudgetManage
-          budget={budget}
           setBudget={actions.setBudget}
           updateMoneyLeft={actions.updateMoneyLeft}
-          />
+        />
+        <BudgetTable budgets={budgets} />
       </div>
     );
   }
@@ -33,7 +34,7 @@ Settings.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    budget: state.budget,
+    budgets: state.budget.list,
   };
 }
 

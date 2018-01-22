@@ -11,11 +11,21 @@ import {
 import * as actions from '../actions';
 
 const styles = theme => ({
-  paper: {
+  root: {
     position: 'absolute',
     display: 'flex',
     right: theme.spacing.unit,
     padding: theme.spacing.unit * 2,
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing.unit,
+      position: 'fixed',
+      bottom: theme.spacing.unit,
+      left: theme.spacing.unit,
+      right: theme.spacing.unit,
+      justifyContent: 'center',
+      backgroundColor: theme.palette.grey['50'],
+      opacity: 0.8
+    }
   },
   icon: {
     color: theme.palette.secondary.main,
@@ -33,7 +43,7 @@ const MoneyLeft = React.createClass({
     const { moneyLeft, classes } = this.props;
 
     return (
-      <Paper className={classes.paper}>
+      <Paper className={classes.root}>
         <WalletIcon className={classes.icon} />
         <Typography type="title" color="accent">
           {`${parseInt(moneyLeft)} ₽`}

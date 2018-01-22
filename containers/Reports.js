@@ -50,12 +50,7 @@ class Reports extends Component {
                 <MonthlyChart
                     data={reports.monthlyChart}
                 />
-                <MonthlyTable
-                    data={reports.monthlyTable}
-                />
-                <MonthlyByCategory
-                    data={reports.monthlyByCategory}
-                />
+
                 <BudgetChart
                     data={reports.budgetChart}
                 />

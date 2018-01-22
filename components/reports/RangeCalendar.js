@@ -4,6 +4,7 @@ import 'react-dates/lib/css/_datepicker.css';
 import React, { Component, PropTypes } from 'react';
 import { DateRangePicker } from 'react-dates';
 import Button from 'material-ui/Button';
+import Hidden from 'material-ui/Hidden';
 import * as actions from '../../actions';
 import moment from 'moment';
 import { withStyles } from 'material-ui/styles';
@@ -12,8 +13,14 @@ const styles = theme => ({
   wrapper: {
     display: 'flex',
     alignItems: 'center'
-  }
+  },
+  calendar: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
+  }    
 });
+
 class RangeCalendar extends Component {
   state = {
     focusedInput: null
@@ -29,17 +36,19 @@ class RangeCalendar extends Component {
 
     return (
       <div className={classes.wrapper}>
-        <DateRangePicker
-          startDateId='startDate'
-          endDateId='endDate'
-          startDate={startDate}
-          endDate={endDate} 
-          focusedInput={focusedInput}
-          onFocusChange={focusedInput => this.setState({ focusedInput })}
-          onDatesChange={this.handleChange}
-          isOutsideRange={() => false}
-          noBorder
-        />
+        <div className={classes.calendar}>
+          <DateRangePicker
+            startDateId='startDate'
+            endDateId='endDate'
+            startDate={startDate}
+            endDate={endDate} 
+            focusedInput={focusedInput}
+            onFocusChange={focusedInput => this.setState({ focusedInput })}
+            onDatesChange={this.handleChange}
+            isOutsideRange={() => false}
+            noBorder
+          />
+        </div>
         <div>
           <Button
             mini

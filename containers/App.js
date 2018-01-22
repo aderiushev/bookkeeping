@@ -5,6 +5,7 @@ import Paper from 'material-ui/Paper';
 import { connect } from 'react-redux';
 import AppTheme from '../theme';
 import Header from '../components/Header';
+import Reboot from 'material-ui/Reboot';
 
 const muiTheme = getMuiTheme(AppTheme);
 

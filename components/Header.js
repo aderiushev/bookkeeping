@@ -10,14 +10,38 @@ import MoneyLeft from '../components/MoneyLeft';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
+import Hidden from 'material-ui/Hidden';
 
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
+    [theme.breakpoints.down('sm')]: {
+      flex: 1,
+      margin: 0,
+      padding: 0,
+      minWidth: theme.spacing.unit * 5
+    }
   },
   buttonIcon: {
     marginRight: theme.spacing.unit,
+
   },
+  toolbar: {
+    [theme.breakpoints.down('sm')]: {
+      margin: 0,
+      padding: 0
+    }
+  },
+  title: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
+  },
+  buttonText: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none'
+    }
+  }
 });
 
 class Header extends Component {
@@ -25,11 +49,9 @@ class Header extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar
-        titleStyle={{ paddingLeft: 30 }}
-      >
-        <Toolbar>
-          <Typography type="title" color="inherit">
+      <AppBar>
+        <Toolbar className={classes.toolbar}>
+          <Typography type="title" color="inherit" className={classes.title}>
             Bookkeeping Service
           </Typography>
 
@@ -41,7 +63,7 @@ class Header extends Component {
             <ShoppingCartItemAddIcon
               className={classes.buttonIcon}
             />
-              Consumptions
+              <span className={classes.buttonText}>Consumptions</span>
           </Button>
           <Button
             className={classes.button}
@@ -51,7 +73,7 @@ class Header extends Component {
             <AssignmentIcon
               className={classes.buttonIcon}
             />
-              Categories
+              <span className={classes.buttonText}>Categories</span>
           </Button>
           <Button
             className={classes.button}
@@ -61,7 +83,7 @@ class Header extends Component {
             <TrendingUpIcon
               className={classes.buttonIcon}
             />
-              Reports
+              <span className={classes.buttonText}>Reports</span>
           </Button>
           <Button
             className={classes.button}
@@ -71,7 +93,7 @@ class Header extends Component {
             <BuildIcon
               className={classes.buttonIcon}
             />
-              Settings
+              <span className={classes.buttonText}>Settings</span>
           </Button>
 
           <MoneyLeft />

@@ -15,70 +15,97 @@ const styles = theme => ({
 })
 
 
-class CategoryTable extends Component {
+class BudgetTable extends Component {
   state = {
     isToolbarOpen: false,
     toolbarAnchorEl: null,
-    toolbarCategory: { id: null, name: null, date: null },
+    toolbarBudget: { id: null, sum: null, comment: null, date: null },
   }
 
   handleToolbarOpen = (event, rowIndex) => {
     this.setState({
       isToolbarOpen: true,
       toolbarAnchorEl: event.target,
-      toolbarCategory: this.props.categories[rowIndex],
+      toolbarBudget: this.props.budgets[rowIndex],
     });
   }
 
   handleToolbarClose = (event) => {
     this.setState({
       isToolbarOpen: false,
-      toolbarCategory: { id: null, name: null },
+      toolbarBudget: { id: null, sum: null, comment: null },
     });
   }
 
-  deleteCategory = () => {
-    this.props.deleteCategory(this.state.toolbarCategory.id);
+  deleteBudget = () => {
+    this.props.deleteBudget(this.state.toolbarBudget.id);
     this.handleToolbarClose();
   }
 
-  updateCategory = (event) => {
-    this.props.updateCategory(this.state.toolbarCategory.id, this.state.toolbarCategory.name);
+  updateBudget = (event) => {
+    const { updateBudget } = this.props
+    const { toolbarBudget } = this.state
+
+    updateBudget(
+      toolbarBudget.id,
+      {
+        sum: toolbarBudget.sum,
+        comment: toolbarBudget.comment
+      }
+    );
     this.handleToolbarClose();
   }
 
-  changeName = (event) => {
-    this.setState({ toolbarCategory: { id: this.state.toolbarCategory.id, name: event.target.value, date: this.state.toolbarCategory.date } });
+  changeComment = (event) => {
+    this.setState({
+      toolbarBudget: {
+        id: this.state.toolbarBudget.id,
+        sum: this.state.toolbarBudget.sum,
+        comment: event.target.value,
+        date: this.state.toolbarBudget.date
+      }
+    });
+  }
+
+  changeSum = (event) => {
+    this.setState({
+      toolbarBudget: {
+        id: this.state.toolbarBudget.id,
+        sum: event.target.value,
+        comment: this.state.toolbarBudget.comment,
+        date: this.state.toolbarBudget.date
+      }
+    });
   }
 
   render() {
-    const { categories, classes } = this.props;
+    const { budgets, classes } = this.props;
 
     return (
       <div>
         <h3 style={{ textAlign: 'center' }}>
-          Categories
+          Budgets
         </h3>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell tooltip="ID">ID</TableCell>
-              <TableCell tooltip="Name">Name</TableCell>
+              <TableCell tooltip="Sum">Sum</TableCell>
+              <TableCell tooltip="Comment" className={classes.mobileHiddenCol}>Comment</TableCell>
               <TableCell tooltip="Date" className={classes.mobileHiddenCol}>Date</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody
-            displayRowCheckbox={false}
-            showRowHover
-            stripedRows
-          >
-            {categories.map((item, index) =>
+          <TableBody>
+            {budgets.map((item, index) =>
               <TableRow key={index}>
                 <TableCell onClick={(e) => this.handleToolbarOpen(e, index)}>
                   {item.id}
                 </TableCell>
                 <TableCell onClick={(e) => this.handleToolbarOpen(e, index)}>
-                  {item.name}
+                  {item.sum}
+                </TableCell>
+                <TableCell onClick={(e) => this.handleToolbarOpen(e, index)} className={classes.mobileHiddenCol}>
+                  {item.comment}
                 </TableCell>
                 <TableCell onClick={(e) => this.handleToolbarOpen(e, index)} className={classes.mobileHiddenCol}>
                   {item.date}
@@ -94,23 +121,35 @@ class CategoryTable extends Component {
           anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
           targetOrigin={{ horizontal: 'left', vertical: 'top' }}
         >
-          <p style={{ fontSize: 11, textAlign: 'center' }}>Category: ID {this.state.toolbarCategory.id}</p>
+          <p style={{ fontSize: 11, textAlign: 'center' }}>Budget: ID {this.state.toolbarBudget.id}</p>
           <Divider />
           <div style={{ textAlign: 'center' }}>
-            <TextField inputStyle={{ textAlign: 'center' }} value={this.state.toolbarCategory.name} onChange={this.changeName} hintText="Name" style={{ width: 100 }} />
+            <TextField
+              value={this.state.toolbarBudget.sum}
+              onChange={this.changeSum}
+              hintText="Sum"
+              style={{ width: 100 }}
+            />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <TextField
+              value={this.state.toolbarBudget.comment}
+              onChange={this.changeComment}
+              hintText="Comment" style={{ width: 100 }}
+            />
           </div>
           <div>
             <Button
               raised
               style={{ margin: 12 }}
-              onClick={this.updateCategory}
+              onClick={this.updateBudget}
             >
               Edit
             </Button>
             <Button
               raised 
               style={{ margin: 12 }}
-              onClick={this.deleteCategory}
+              onClick={this.deleteBudget}
             >
               Remove
             </Button>
@@ -121,8 +160,8 @@ class CategoryTable extends Component {
   }
 }
 
-CategoryTable.propTypes = {
+BudgetTable.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(CategoryTable);
+export default withStyles(styles)(BudgetTable);

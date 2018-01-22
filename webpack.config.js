@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+var WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
@@ -20,7 +21,8 @@ module.exports = {
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.optimize.DedupePlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new WebpackBuildNotifierPlugin()
     ],
     module: {
         loaders: [
@@ -38,11 +40,10 @@ module.exports = {
                 loaders: [ 'style', 'raw' ],
                 include: __dirname
             },
-
-{
-            test: /\.(png|jp(e*)g|svg)$/,  
-            loaders: ['url-loader?limit=8000&name=images/[hash]-[name].[ext]']
-        }
+            {
+                test: /\.(png|jp(e*)g|svg)$/,  
+                loaders: ['url-loader?limit=8000&name=images/[hash]-[name].[ext]']
+            }
         ]
     }
 };
