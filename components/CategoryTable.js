@@ -14,6 +14,106 @@ const styles = theme => ({
   }
 })
 
+class CustomPopover extends Component {
+  state = {
+    isDeleteCoverVisible: false
+  }
+
+  onDeleteClick = () => {
+    this.setState({ isDeleteCoverVisible: true })
+  }
+
+  onConfirmDeleteClick = () => {
+    const { deleteCategory } = this.props
+
+    this.confirmationClose()
+
+    deleteCategory()
+  }
+
+  confirmationClose = () => {
+    this.setState({ isDeleteCoverVisible: false })
+  }
+
+  onClose = () => {
+    const { handleToolbarClose } = this.props
+
+    this.confirmationClose()
+
+    handleToolbarClose()
+  }
+
+  render () {
+    const {
+      category,
+      isToolbarOpen,
+      handleToolbarClose,
+      toolbarAnchorEl,
+      deleteCategory,
+      updateCategory,
+      changeName
+    } = this.props
+    const { isDeleteCoverVisible } = this.state
+
+    return (
+      <Popover
+        open={isToolbarOpen}
+        onClose={this.onClose}
+        anchorEl={toolbarAnchorEl}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+      >
+        {isDeleteCoverVisible
+          ?
+            <div>
+              <p style={{ textAlign: 'center' }}>Are you sure?</p>
+              <Button
+                raised
+                style={{ margin: 12 }}
+                onClick={this.confirmationClose}
+              >
+                Back
+              </Button>
+              <Button
+                raised
+                color="accent"
+                style={{ margin: 12 }}
+                onClick={this.onConfirmDeleteClick}
+              >
+                Yes
+              </Button>
+
+            </div>
+          :
+            <div>
+              <p style={{ fontSize: 11, textAlign: 'center' }}>Category: ID {category.id}</p>
+              <Divider />
+              <div style={{ textAlign: 'center' }}>
+                <TextField inputStyle={{ textAlign: 'center' }} value={category.name} onChange={changeName} hintText="Name" style={{ width: 100 }} />
+              </div>
+              <div>
+                <Button
+                  raised
+                  style={{ margin: 12 }}
+                  onClick={this.onDeleteClick}
+                >
+                  Remove
+                </Button>
+                <Button
+                  color="accent"
+                  raised
+                  style={{ margin: 12 }}
+                  onClick={updateCategory}
+                >
+                  Edit
+                </Button>
+              </div>
+            </div>
+        }
+      </Popover>
+    )
+  }
+}
 
 class CategoryTable extends Component {
   state = {
@@ -43,7 +143,10 @@ class CategoryTable extends Component {
   }
 
   updateCategory = (event) => {
-    this.props.updateCategory(this.state.toolbarCategory.id, this.state.toolbarCategory.name);
+    const { updateCategory } = this.props
+    const { toolbarCategory }  = this.state
+
+    updateCategory(toolbarCategory.id, { name : toolbarCategory.name });
     this.handleToolbarClose();
   }
 
@@ -53,6 +156,7 @@ class CategoryTable extends Component {
 
   render() {
     const { categories, classes } = this.props;
+    const { toolbarCategory, isToolbarOpen, toolbarAnchorEl } = this.state
 
     return (
       <div>
@@ -87,35 +191,15 @@ class CategoryTable extends Component {
             )}
           </TableBody>
         </Table>
-        <Popover
-          onClose={this.handleToolbarClose}
-          open={this.state.isToolbarOpen}
-          anchorEl={this.state.toolbarAnchorEl}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-        >
-          <p style={{ fontSize: 11, textAlign: 'center' }}>Category: ID {this.state.toolbarCategory.id}</p>
-          <Divider />
-          <div style={{ textAlign: 'center' }}>
-            <TextField inputStyle={{ textAlign: 'center' }} value={this.state.toolbarCategory.name} onChange={this.changeName} hintText="Name" style={{ width: 100 }} />
-          </div>
-          <div>
-            <Button
-              raised
-              style={{ margin: 12 }}
-              onClick={this.updateCategory}
-            >
-              Edit
-            </Button>
-            <Button
-              raised 
-              style={{ margin: 12 }}
-              onClick={this.deleteCategory}
-            >
-              Remove
-            </Button>
-          </div>
-        </Popover>
+        <CustomPopover
+          category={toolbarCategory}
+          isToolbarOpen={isToolbarOpen}
+          handleToolbarClose={this.handleToolbarClose}
+          toolbarAnchorEl={toolbarAnchorEl}
+          deleteCategory={this.deleteCategory}
+          updateCategory={this.updateCategory}
+          changeName={this.changeName}
+        />
       </div>
     );
   }

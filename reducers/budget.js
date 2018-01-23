@@ -1,4 +1,4 @@
-import { GET_BUDGETS_LIST, GET_CURRENT_BUDGET, SET_BUDGET } from '../constants/ActionTypes'
+import { GET_BUDGETS_LIST, GET_CURRENT_BUDGET, CREATE_BUDGET, UPDATE_BUDGET, DELETE_BUDGET } from '../constants/ActionTypes'
 
 const initialState = {
   list: [],
@@ -17,10 +17,23 @@ export default function budget(state = initialState, action) {
         ...state,
         current: action.data
       }
-    case SET_BUDGET:
+    case UPDATE_BUDGET:
+        return {
+            ...state,
+            list: state.list.map(budget => budget.id === action.data.id ? { ...budget, ...action.data.budget } : budget)
+        }
+    case DELETE_BUDGET:
+        return {
+            ...state,
+            list: state.list.filter(budget => budget.id !== action.data.id)
+        }
+    case CREATE_BUDGET:
       return {
-        ...state,
-        current: action.lastRow
+          ...state,
+          list: [
+              action.data,
+              ...state.list,
+          ]
       }
 
     default:

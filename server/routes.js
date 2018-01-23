@@ -94,7 +94,7 @@ module.exports = (app, db) => {
     });
 
     app.put("/categories", function (req, res) {
-        if (req.body.name && req.body.id) {
+        if (req.body.id && req.body.category) {
             db.run(queries.categories.update(), { ':id': req.body.id, ':name': req.body.category.name }, function (error) {
                 if (error) {
                     res.status(500).send(error)
@@ -104,7 +104,7 @@ module.exports = (app, db) => {
             });
         }
         else {
-            res.send(400);
+            res.sendStatus(400);
         }
     });
 
@@ -234,6 +234,37 @@ module.exports = (app, db) => {
         });
     });
 
+    app.put("/budget", function (req, res) {
+        if (req.body.id && req.body.budget) {
+            db.run(queries.budget.update(), { ':id': req.body.id, ':sum': req.body.budget.sum, ':comment': req.body.budget.comment }, function (error) {
+                if (error) {
+                    res.status(500).send(error)
+                } else {
+                    res.json(req.body);
+                }
+            });
+        }
+        else {
+            res.sendStatus(400);
+        }
+    });
+
+    app.delete("/budget", function (req, res) {
+        if (req.body.id) {
+            db.run(queries.budget.delete(), { ':id': req.body.id }, function (error) {
+                if (error) {
+                    res.status(500).send(error)
+                } else {
+                    res.json({ id: req.body.id });
+                }
+            });
+        }
+        else {
+            res.send(400);
+        }
+    });
+
+
     // app.get("/current-budget-per-day", function (req, res) {
     //     db.all(queries.budget.currentPerDay(), [], function (error, rows) {
     //         if (error) {
@@ -283,6 +314,17 @@ module.exports = (app, db) => {
             } else {
                 res.json(rows[0]);
             }
+        });
+    });
+
+    app.get("/budgets", function (req, res) {
+        db.all(queries.budget.read(), [], function (error, rows) {
+            if (error) {
+                res.status(500).send(error)
+            } else {
+                res.json(rows)
+            }
+           
         });
     });
 };

@@ -106,7 +106,7 @@ module.exports = (db) => {
                 return "INSERT INTO budget(sum, comment) VALUES(?, ?)";
             },
             readById: () => {
-                return "SELECT COALESCE(sum, 0) as sum, comment from budget WHERE budget.id = ?";
+                return "SELECT id, COALESCE(sum, 0) as sum, comment, strftime('%d.%m.%Y %H:%m', ts) as date from budget WHERE budget.id = ?";
             },
             current: () => {
                 return "SELECT id, COALESCE(sum, 0) as sum, comment from budget " +
@@ -114,6 +114,15 @@ module.exports = (db) => {
                     "AND ts <  date('now','start of month','+1 month') " +
                     "ORDER BY ts DESC LIMIT 1";
             },
+            read: () => {
+                return "SELECT budget.id, budget.sum, budget.comment, strftime('%d.%m.%Y %H:%m', budget.ts) as date FROM budget ORDER BY budget.ts DESC LIMIT 20"
+            },
+            update: () => {
+                return "UPDATE budget SET sum = :sum, comment = :comment WHERE id = :id";
+            },
+            delete: () => {
+                return "DELETE FROM budget WHERE id = :id";
+            }
             // currentPerDay: () => {
             //     return "SELECT COALESCE(sum, 0) / strftime('%d', date('now','start of month','+1 month', '-1 day')) as budget_per_day from budget " +
             //         "WHERE ts >= date('now', 'start of month') " +

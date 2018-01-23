@@ -14,6 +14,110 @@ const styles = theme => ({
   }
 })
 
+class CustomPopover extends Component {
+  state = {
+    isDeleteCoverVisible: false
+  }
+
+  onDeleteClick = () => {
+    this.setState({ isDeleteCoverVisible: true })
+  }
+
+  onConfirmDeleteClick = () => {
+    const { deleteConsumption } = this.props
+
+    this.confirmationClose()
+
+    deleteConsumption()
+  }
+
+  confirmationClose = () => {
+    this.setState({ isDeleteCoverVisible: false })
+  }
+
+  onClose = () => {
+    const { handleToolbarClose } = this.props
+
+    this.confirmationClose()
+
+    handleToolbarClose()
+  }
+
+  render () {
+    const {
+      consumption,
+      isToolbarOpen,
+      handleToolbarClose,
+      toolbarAnchorEl,
+      deleteConsumption,
+      updateConsumption,
+      changeSum,
+      changeComment
+    } = this.props
+    const { isDeleteCoverVisible } = this.state
+
+    return (
+      <Popover
+        open={isToolbarOpen}
+        onClose={this.onClose}
+        anchorEl={toolbarAnchorEl}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+      >
+        {isDeleteCoverVisible
+          ?
+            <div>
+              <p style={{ textAlign: 'center' }}>Are you sure?</p>
+              <Button
+                raised
+                style={{ margin: 12 }}
+                onClick={this.confirmationClose}
+              >
+                Back
+              </Button>
+              <Button
+                raised
+                color="accent"
+                style={{ margin: 12 }}
+                onClick={this.onConfirmDeleteClick}
+              >
+                Yes
+              </Button>
+
+            </div>
+          :
+            <div>
+              <p style={{ fontSize: 11, textAlign: 'center' }}>Consumption: ID {consumption.id}</p>
+              <Divider />
+              <div style={{ textAlign: 'center' }}>
+                <TextField inputStyle={{ textAlign: 'center' }} value={consumption.sum} onChange={changeSum} hintText="Sum" style={{ width: 100 }} />
+                <br />
+                <TextField inputStyle={{ textAlign: 'center' }} value={consumption.comment} onChange={changeComment} hintText="Comment" style={{ width: 100 }} />
+              </div>
+              <div>
+                <Button
+                  raised
+                  style={{ margin: 12 }}
+                  onClick={this.onDeleteClick}
+                >
+                  Remove
+                </Button>
+                <Button
+                  color="accent"
+                  raised
+                  style={{ margin: 12 }}
+                  onClick={updateConsumption}
+                >
+                  Edit
+                </Button>
+              </div>
+            </div>
+        }
+      </Popover>
+    )
+  }
+}
+
 class ConsumptionTable extends Component {
   state = {
     isToolbarOpen: false,
@@ -78,6 +182,8 @@ class ConsumptionTable extends Component {
 
   render () {
     const { consumptions, className, classes } = this.props;
+    const { toolbarConsumption, isToolbarOpen, toolbarAnchorEl } = this.state
+
     return (
       <div className={className}>
         <h3 style={{ textAlign: 'center' }}>
@@ -128,37 +234,16 @@ class ConsumptionTable extends Component {
             )}
           </TableBody>
         </Table>
-        <Popover
-          open={this.state.isToolbarOpen}
-          onClose={this.handleToolbarClose}
-          anchorEl={this.state.toolbarAnchorEl}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-        >
-          <p style={{ fontSize: 11, textAlign: 'center' }}>Consumption: ID {this.state.toolbarConsumption.id}</p>
-          <Divider />
-          <div style={{ textAlign: 'center' }}>
-            <TextField inputStyle={{ textAlign: 'center' }} value={this.state.toolbarConsumption.sum} onChange={this.changeSum} hintText="Sum" style={{ width: 100 }} />
-            <br />
-            <TextField inputStyle={{ textAlign: 'center' }} value={this.state.toolbarConsumption.comment} onChange={this.changeComment} hintText="Comment" style={{ width: 100 }} />
-          </div>
-          <div>
-            <Button
-              raised
-              style={{ margin: 12 }}
-              onClick={this.updateConsumption}
-            >
-              Edit
-            </Button>
-            <Button
-              raised 
-              style={{ margin: 12 }}
-              onClick={this.deleteConsumption}
-            >
-              Remove
-            </Button>
-          </div>
-        </Popover>
+        <CustomPopover
+          consumption={toolbarConsumption}
+          isToolbarOpen={isToolbarOpen}
+          handleToolbarClose={this.handleToolbarClose}
+          toolbarAnchorEl={toolbarAnchorEl}
+          deleteConsumption={this.deleteConsumption}
+          updateConsumption={this.updateConsumption}
+          changeSum={this.changeSum}
+          changeComment={this.changeComment}
+        />
       </div>
     );
   }

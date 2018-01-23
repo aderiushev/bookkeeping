@@ -43,11 +43,12 @@ class BudgetManage extends Component {
     this.setState({ comment: e.target.value })
   } 
 
-  setBudget = (event) => {
+  createBudget = (event) => {
+    const { createBudget, updateMoneyLeft } = this.props
     const { sum, comment } = this.state
 
-    this.props.setBudget(sum, comment);
-    this.props.updateMoneyLeft();
+    createBudget({ sum, comment });
+    updateMoneyLeft();
   }
 
   render() {
@@ -71,7 +72,7 @@ class BudgetManage extends Component {
           />
         </FormControl>
 
-        <Button fab color="accent" onClick={this.setBudget} className={classes.submitBtn}>
+        <Button fab color="accent" onClick={this.createBudget} className={classes.submitBtn}>
           <AddIcon />
         </Button>
       </div>
@@ -80,7 +81,7 @@ class BudgetManage extends Component {
 }
 
 BudgetManage.propTypes = {
-  setBudget: PropTypes.func.isRequired,
+  createBudget: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 };
 

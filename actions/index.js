@@ -47,7 +47,7 @@ export function getCurrentBudget() {
           type: types.GET_CURRENT_BUDGET,
           data: response.body
         })
-    })
+      })
   }
 }
 
@@ -101,7 +101,6 @@ export function updateCategory(id, category) {
   }
 }
 
-
 export function deleteConsumption(consumptionId) {
   return (dispatch, getState) => {
     return request('DELETE', '/consumptions')
@@ -148,23 +147,51 @@ export function deleteCategory(categoryId) {
   }
 }
 
-export function setBudget(sum, comment) {
-  let lastRow = {};
+export function createBudget({ sum, comment }) {
+  return (dispatch, getState) => {
+    return request('POST', '/budget')
+      .send({
+        sum,
+        comment
+      })
+      .then(response => {
+        dispatch({
+          type: types.CREATE_BUDGET,
+          data: response.body
+        })
+    })
+  }
+}
 
-  $.ajax({
-    url: '/budget',
-    type: 'POST',
-    async: false,
-    data: {
-      sum,
-      comment,
-    },
-    success(data) {
-      lastRow = data;
-    },
-  });
+export function updateBudget(id,  budget) {
+  return (dispatch, getState) => {
+    return request('PUT', '/budget')
+      .send({
+        id,
+        budget
+      })
+      .then(response => {
+        dispatch({
+          type: types.UPDATE_BUDGET,
+          data: response.body
+        })
+    })
+  }
+}
 
-  return { type: types.SET_BUDGET, lastRow };
+export function deleteBudget(budgetId) {
+  return (dispatch, getState) => {
+    return request('DELETE', '/budget')
+      .send({
+        id: budgetId
+      })
+      .then(response => {
+        dispatch({
+          type: types.DELETE_BUDGET,
+          data: response.body
+        })
+    })
+  }
 }
 
 export function updateMoneyLeft() {

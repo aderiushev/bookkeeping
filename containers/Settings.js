@@ -19,10 +19,14 @@ class Settings extends Component {
     return (
       <div>
         <BudgetManage
-          setBudget={actions.setBudget}
+          createBudget={actions.createBudget}
           updateMoneyLeft={actions.updateMoneyLeft}
         />
-        <BudgetTable budgets={budgets} />
+        <BudgetTable
+          budgets={budgets}
+          deleteBudget={actions.deleteBudget}
+          updateBudget={actions.updateBudget}
+          />
       </div>
     );
   }

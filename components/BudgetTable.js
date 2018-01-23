@@ -14,6 +14,109 @@ const styles = theme => ({
   }
 })
 
+class CustomPopover extends Component {
+  state = {
+    isDeleteCoverVisible: false
+  }
+
+  onDeleteClick = () => {
+    this.setState({ isDeleteCoverVisible: true })
+  }
+
+  onConfirmDeleteClick = () => {
+    const { deleteBudget } = this.props
+
+    this.confirmationClose()
+
+    deleteBudget()
+  }
+
+  confirmationClose = () => {
+    this.setState({ isDeleteCoverVisible: false })
+  }
+
+  onClose = () => {
+    const { handleToolbarClose } = this.props
+
+    this.confirmationClose()
+
+    handleToolbarClose()
+  }
+
+  render () {
+    const {
+      budget,
+      isToolbarOpen,
+      handleToolbarClose,
+      toolbarAnchorEl,
+      deleteBudget,
+      updateBudget,
+      changeSum,
+      changeComment
+    } = this.props
+    const { isDeleteCoverVisible } = this.state
+
+    return (
+      <Popover
+        open={isToolbarOpen}
+        onClose={this.onClose}
+        anchorEl={toolbarAnchorEl}
+        anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+        targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+      >
+        {isDeleteCoverVisible
+          ?
+            <div>
+              <p style={{ textAlign: 'center' }}>Are you sure?</p>
+              <Button
+                raised
+                style={{ margin: 12 }}
+                onClick={this.confirmationClose}
+              >
+                Back
+              </Button>
+              <Button
+                raised
+                color="accent"
+                style={{ margin: 12 }}
+                onClick={this.onConfirmDeleteClick}
+              >
+                Yes
+              </Button>
+
+            </div>
+          :
+            <div>
+              <p style={{ fontSize: 11, textAlign: 'center' }}>Budget: ID {budget.id}</p>
+              <Divider />
+              <div style={{ textAlign: 'center' }}>
+                <TextField inputStyle={{ textAlign: 'center' }} value={budget.sum} onChange={changeSum} hintText="Sum" style={{ width: 100 }} />
+                <br />
+                <TextField inputStyle={{ textAlign: 'center' }} value={budget.comment} onChange={changeComment} hintText="Comment" style={{ width: 100 }} />
+              </div>
+              <div>
+                <Button
+                  raised
+                  style={{ margin: 12 }}
+                  onClick={this.onDeleteClick}
+                >
+                  Remove
+                </Button>
+                <Button
+                  color="accent"
+                  raised
+                  style={{ margin: 12 }}
+                  onClick={updateBudget}
+                >
+                  Edit
+                </Button>
+              </div>
+            </div>
+        }
+      </Popover>
+    )
+  }
+}
 
 class BudgetTable extends Component {
   state = {
@@ -38,7 +141,10 @@ class BudgetTable extends Component {
   }
 
   deleteBudget = () => {
-    this.props.deleteBudget(this.state.toolbarBudget.id);
+    const { deleteBudget } = this.props
+    const { toolbarBudget } = this.state
+
+    deleteBudget(toolbarBudget.id);
     this.handleToolbarClose();
   }
 
@@ -80,6 +186,7 @@ class BudgetTable extends Component {
 
   render() {
     const { budgets, classes } = this.props;
+    const { toolbarBudget, isToolbarOpen, toolbarAnchorEl } = this.state
 
     return (
       <div>
@@ -114,47 +221,16 @@ class BudgetTable extends Component {
             )}
           </TableBody>
         </Table>
-        <Popover
-          onClose={this.handleToolbarClose}
-          open={this.state.isToolbarOpen}
-          anchorEl={this.state.toolbarAnchorEl}
-          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-        >
-          <p style={{ fontSize: 11, textAlign: 'center' }}>Budget: ID {this.state.toolbarBudget.id}</p>
-          <Divider />
-          <div style={{ textAlign: 'center' }}>
-            <TextField
-              value={this.state.toolbarBudget.sum}
-              onChange={this.changeSum}
-              hintText="Sum"
-              style={{ width: 100 }}
-            />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <TextField
-              value={this.state.toolbarBudget.comment}
-              onChange={this.changeComment}
-              hintText="Comment" style={{ width: 100 }}
-            />
-          </div>
-          <div>
-            <Button
-              raised
-              style={{ margin: 12 }}
-              onClick={this.updateBudget}
-            >
-              Edit
-            </Button>
-            <Button
-              raised 
-              style={{ margin: 12 }}
-              onClick={this.deleteBudget}
-            >
-              Remove
-            </Button>
-          </div>
-        </Popover>
+        <CustomPopover
+          budget={toolbarBudget}
+          isToolbarOpen={isToolbarOpen}
+          handleToolbarClose={this.handleToolbarClose}
+          toolbarAnchorEl={toolbarAnchorEl}
+          deleteBudget={this.deleteBudget}
+          updateBudget={this.updateBudget}
+          changeSum={this.changeSum}
+          changeComment={this.changeComment}
+        />
       </div>
     );
   }
