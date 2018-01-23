@@ -24,7 +24,7 @@ import thunk from 'redux-thunk';
 var injectTapEventPlugin = require("react-tap-event-plugin");
 injectTapEventPlugin();
 
-const middleware = process.env.NODE_ENV === 'production' ? [thunk] : [logger(), thunk];
+const middleware = process.env.NODE_ENV === 'production' ? [thunk] : [thunk, logger()];
 
 const reducers = combineReducers({
     consumptions,

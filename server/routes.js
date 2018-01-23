@@ -66,8 +66,12 @@ module.exports = (app, db) => {
 
     app.delete("/consumptions", function (req, res) {
         if (req.body.id) {
-            db.run(queries.consumptions.delete(), [req.body.id], function () {
-                res.json({status: true});
+            db.run(queries.consumptions.delete(), {':id': req.body.id}, function (error) {
+                if (error) {
+                    res.status(500).send(error)
+                } else {
+                    res.json({ id: req.body.id });
+                }
             });
         }
         else {
@@ -76,9 +80,13 @@ module.exports = (app, db) => {
     });
 
     app.put("/consumptions", function (req, res) {
-        if (req.body.sum && req.body.id) {
-            db.run(queries.consumptions.update(), [req.body.sum, req.body.comment, req.body.id], function () {
-                res.json({status: true});
+        if (req.body.id, req.body.consumption) {
+            db.run(queries.consumptions.update(), {':id': req.body.id, ':sum': req.body.consumption.sum, ':comment': req.body.consumption.comment}, function (error) {
+                if (error) {
+                    res.status(500).send(error)
+                } else {
+                    res.json(req.body);
+                }
             });
         }
         else {
@@ -89,7 +97,7 @@ module.exports = (app, db) => {
     app.put("/categories", function (req, res) {
         if (req.body.name && req.body.id) {
             db.run(queries.categories.update(), [req.body.name, req.body.id], function () {
-                res.json({status: true});
+                res.json({ status: true });
             });
         }
         else {
@@ -209,7 +217,7 @@ module.exports = (app, db) => {
 
     });
 
-    app.get("/current-budget", function (req, res) {
+    app.get("/budget", function (req, res) {
         db.all(queries.budget.current(), [], function (error, rows) {
             if (error) {
                 console.log(error);

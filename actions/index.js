@@ -3,32 +3,28 @@ import $ from 'jquery';
 import request from 'superagent'
 
 
-export function initConsumptions() {
-  let consumptions = [];
-  $.ajax({
-    url: '/consumptions',
-    type: 'GET',
-    async: false,
-    success(data) {
-      consumptions = data;
-    },
-  });
-
-  return { type: types.INIT_CONSUMPTIONS, consumptions };
+export function getConsumptionsList() {
+  return (dispatch, getState) => {
+    return request('GET', '/consumptions')
+      .then(response => {
+        dispatch({
+          type: types.GET_CONSUMPTIONS_LIST,
+          data: response.body
+        })
+    })
+  }
 }
 
-export function initCategories() {
-  let categories = [];
-  $.ajax({
-    url: '/categories',
-    type: 'GET',
-    async: false,
-    success(data) {
-      categories = data;
-    },
-  });
-
-  return { type: types.INIT_CATEGORIES, categories };
+export function getCategoriesList() {
+  return (dispatch, getState) => {
+    return request('GET', '/categories')
+      .then(response => {
+        dispatch({
+          type: types.GET_CATEGORIES_LIST,
+          data: response.body
+        })
+    })
+  }
 }
 
 export function getBudgetsList() {
@@ -43,6 +39,17 @@ export function getBudgetsList() {
   }
 }
 
+export function getCurrentBudget() {
+  return (dispatch, getState) => {
+    return request('GET', '/budget')
+      .then(response => {
+        dispatch({
+          type: types.GET_CURRENT_BUDGET,
+          data: response.body
+        })
+    })
+  }
+}
 
 export function createConsumption(category_id, sum, comment, budget_id) {
   return (dispatch, getState) => {
@@ -62,24 +69,20 @@ export function createConsumption(category_id, sum, comment, budget_id) {
   }
 }
 
-export function updateConsumption(consumption_id, sum, comment) {
-  $.ajax({
-    url: '/consumptions',
-    type: 'PUT',
-    async: false,
-    data: {
-      id: consumption_id,
-      sum,
-      comment,
-    },
-    success(data) {
-      // @TODO: process errors
-    },
-  });
-
-  return {
-    type: types.UPDATE_CONSUMPTION, consumption_id, sum, comment,
-  };
+export function updateConsumption(id, consumption) {
+  return (dispatch, getState) => {
+    return request('PUT', '/consumptions')
+      .send({
+        id,
+        consumption
+      })
+      .then(response => {
+        dispatch({
+          type: types.UPDATE_CONSUMPTION,
+          data: response.body
+        })
+    })
+  }
 }
 
 export function updateCategory(category_id, name) {
@@ -100,20 +103,19 @@ export function updateCategory(category_id, name) {
 }
 
 
-export function deleteConsumption(consumption_id) {
-  $.ajax({
-    url: '/consumptions',
-    type: 'DELETE',
-    async: false,
-    data: {
-      id: consumption_id,
-    },
-    success(data) {
-      // @TODO: process errors
-    },
-  });
-
-  return { type: types.DELETE_CONSUMPTION, consumption_id };
+export function deleteConsumption(consumptionId) {
+  return (dispatch, getState) => {
+    return request('DELETE', '/consumptions')
+      .send({
+        id: consumptionId
+      })
+      .then(response => {
+        dispatch({
+          type: types.DELETE_CONSUMPTION,
+          data: response.body
+        })
+    })
+  }
 }
 
 export function createCategory(name) {

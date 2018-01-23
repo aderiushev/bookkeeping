@@ -18,11 +18,11 @@ const styles = theme => ({
 const Consumptions = React.createClass({
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { actions } = this.props;
 
-    dispatch(actions.initBudget());
-    dispatch(actions.initCategories());
-    dispatch(actions.initConsumptions());
+    actions.getCurrentBudget()
+    actions.initCategories()
+    actions.getConsumptionsList()
   },
 
   render() {
@@ -60,15 +60,14 @@ Consumptions.propTypes = {
 
 
 const mapStateToProps = state => ({
-  consumptions: state.consumptions,
+  consumptions: state.consumptions.list,
   categories: state.categories,
-  budget: state.budget,
+  budget: state.budget.current,
 });
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch),
-    dispatch,
+    actions: bindActionCreators(actions, dispatch)
   };
 }
 

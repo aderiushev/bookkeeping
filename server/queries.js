@@ -45,10 +45,10 @@ module.exports = (db) => {
                 return "SELECT consumption.id, category.name, consumption.sum, consumption.comment, strftime('%d.%m.%Y %H:%m', consumption.ts) as date FROM consumption INNER JOIN category ON consumption.category_id = category.id WHERE consumption.id = ?";
             },
             update: () => {
-                return "UPDATE consumption SET sum = ?, comment = ? WHERE id = ?";
+                return "UPDATE consumption SET sum = :sum, comment = :comment WHERE id = :id";
             },
             delete: () => {
-                return "DELETE FROM consumption WHERE id = ?";
+                return "DELETE FROM consumption WHERE id = :id";
             }
         },
         reports : {

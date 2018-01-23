@@ -31,7 +31,7 @@ class ConsumptionTable extends Component {
     });
   }
 
-  handleToolbarClose = (event) => {
+  handleToolbarClose = event => {
     this.setState({
       isToolbarOpen: false,
       toolbarConsumption: { id: null, sum: null, date: null },
@@ -39,30 +39,44 @@ class ConsumptionTable extends Component {
   }
 
   deleteConsumption = () => {
-    this.props.deleteConsumption(this.state.toolbarConsumption.id);
+    const { toolbarConsumption } = this.state
+    this.props.deleteConsumption(toolbarConsumption.id);
     this.props.updateMoneyLeft();
     this.handleToolbarClose();
   }
 
-  updateConsumption = (event) => {
-    this.props.updateConsumption(this.state.toolbarConsumption.id, this.state.toolbarConsumption.sum, this.state.toolbarConsumption.comment);
-    this.props.updateMoneyLeft();
+  updateConsumption = event => {
+    const { updateMoneyLeft, updateConsumption } = this.props
+    const { toolbarConsumption }  = this.state
+
+    updateConsumption(toolbarConsumption.id, {
+      sum: toolbarConsumption.sum,
+      comment: toolbarConsumption.comment
+    }).then(() => {
+      updateMoneyLeft()
+    })
+    
     this.handleToolbarClose();
   }
 
-  changeSum = (event) => {
-    const toolbarConsumption = this.state.toolbarConsumption;
-    toolbarConsumption.sum = event.target.value;
-    this.setState({ toolbarConsumption });
+  changeSum = event => {
+    const { toolbarConsumption } = this.state
+
+    const updatedToolbarConsumption = {
+      ...toolbarConsumption,
+      sum: event.target.value
+    }
+
+    this.setState({ toolbarConsumption: updatedToolbarConsumption });
   }
 
-  changeComment = (event) => {
+  changeComment = event => {
     const toolbarConsumption = this.state.toolbarConsumption;
     toolbarConsumption.comment = event.target.value;
     this.setState({ toolbarConsumption });
   }
 
-  render() {
+  render () {
     const { consumptions, className, classes } = this.props;
     return (
       <div className={className}>

@@ -1,28 +1,34 @@
-import { INIT_CONSUMPTIONS, CREATE_CONSUMPTION, UPDATE_CONSUMPTION, DELETE_CONSUMPTION } from '../constants/ActionTypes'
+import { GET_CONSUMPTIONS_LIST, CREATE_CONSUMPTION, UPDATE_CONSUMPTION, DELETE_CONSUMPTION } from '../constants/ActionTypes'
 
-let initialState = [];
+const initialState = {
+    list: []
+}
 
 export default function consumptions(state = initialState, action) {
     switch (action.type) {
-        case INIT_CONSUMPTIONS:
-            return action.consumptions;
-
+        case GET_CONSUMPTIONS_LIST:
+            return {
+                ...state,
+                list: action.data
+            }
         case CREATE_CONSUMPTION:
-            return [
-                action.data,
-                ...state
-            ];
-
+            return {
+                ...state,
+                list: [
+                    action.data,
+                    ...state.list,
+                ]
+            }
         case UPDATE_CONSUMPTION:
-            return state.map(consumption =>
-                consumption.id === action.consumption_id ? Object.assign({}, consumption, { sum: action.sum, comment: action.comment }) : consumption
-            );
-
+            return {
+                ...state,
+                list: state.list.map(consumption => consumption.id === action.data.id ? { ...consumption, ...action.data.consumption } : consumption)
+            }
         case DELETE_CONSUMPTION:
-            return state.filter(consumption =>
-                consumption.id !== action.consumption_id
-            );
-
+            return {
+                ...state,
+                list: state.list.filter(consumption => consumption.id !== action.data.id)
+            }
         default:
             return state
     }
