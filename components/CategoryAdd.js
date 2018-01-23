@@ -36,19 +36,18 @@ const styles = theme => ({
 });
 
 class CategoryAdd extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: '',
-    };
+  state = {
+    name: ''
   }
 
-  createCategory = (event) => {
-    this.props.createCategory(this.state.name);
+  createCategory = event => {
+    const { createCategory } = this.props
+    const { name } = this.state
+
+    createCategory({ name });
   }
 
-  changeName = (event) => {
+  changeName = event => {
     this.setState({ name: event.target.value });
   }
 
@@ -66,7 +65,12 @@ class CategoryAdd extends Component {
               placeholder="Category name"
             />
           </FormControl>
-          <Button fab color="accent" onClick={this.createCategory} className={classes.submitBtn}>
+          <Button
+            fab
+            color="accent"
+            onClick={this.createCategory}
+            className={classes.submitBtn}
+          >
             <AddIcon />
           </Button>
         </Paper>

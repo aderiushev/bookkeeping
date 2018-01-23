@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import * as actions from '../actions';
+import { getGiphy } from '../actions'
 import ConsumptionAdd from '../components/ConsumptionAdd';
 import ConsumptionTable from '../components/ConsumptionTable';
 
@@ -21,7 +22,7 @@ const Consumptions = React.createClass({
     const { actions } = this.props;
 
     actions.getCurrentBudget()
-    actions.initCategories()
+    actions.getCategoriesList()
     actions.getConsumptionsList()
   },
 
@@ -35,6 +36,7 @@ const Consumptions = React.createClass({
         <ConsumptionAdd
           createConsumption={actions.createConsumption}
           updateMoneyLeft={actions.updateMoneyLeft}
+          getGiphy={getGiphy}
           categories={categories}
           budget={budget}
         />
@@ -61,7 +63,7 @@ Consumptions.propTypes = {
 
 const mapStateToProps = state => ({
   consumptions: state.consumptions.list,
-  categories: state.categories,
+  categories: state.categories.list,
   budget: state.budget.current,
 });
 

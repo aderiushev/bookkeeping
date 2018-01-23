@@ -6,21 +6,20 @@ import * as actions from '../actions';
 import CategoryAdd from '../components/CategoryAdd';
 import CategoryTable from '../components/CategoryTable';
 
-import $ from 'jquery';
-
-
 class Categories extends Component {
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { actions } = this.props;
 
-    dispatch(actions.initCategories());
+    actions.getCategoriesList();
   }
 
   render() {
     const { categories, actions } = this.props;
     return (
       <div>
-        <CategoryAdd createCategory={actions.createCategory} />
+        <CategoryAdd
+          createCategory={actions.createCategory}
+        />
         <CategoryTable
           categories={categories}
           deleteCategory={actions.deleteCategory}
@@ -38,14 +37,13 @@ Categories.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    categories: state.categories,
+    categories: state.categories.list,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch),
-    dispatch,
+    actions: bindActionCreators(actions, dispatch)
   };
 }
 

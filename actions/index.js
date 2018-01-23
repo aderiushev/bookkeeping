@@ -51,7 +51,7 @@ export function getCurrentBudget() {
   }
 }
 
-export function createConsumption(category_id, sum, comment, budget_id) {
+export function createConsumption({ category_id, sum, comment, budget_id }) {
   return (dispatch, getState) => {
     return request('POST', '/consumptions')
       .send({
@@ -85,21 +85,20 @@ export function updateConsumption(id, consumption) {
   }
 }
 
-export function updateCategory(category_id, name) {
-  $.ajax({
-    url: '/categories',
-    type: 'PUT',
-    async: false,
-    data: {
-      id: category_id,
-      name,
-    },
-    success(data) {
-      // @TODO: process errors
-    },
-  });
-
-  return { type: types.UPDATE_CATEGORY, category_id, name };
+export function updateCategory(id, category) {
+  return (dispatch, getState) => {
+    return request('PUT', '/categories')
+      .send({
+        id,
+        category
+      })
+      .then(response => {
+        dispatch({
+          type: types.UPDATE_CATEGORY,
+          data: response.body
+        })
+    })
+  }
 }
 
 
@@ -118,39 +117,35 @@ export function deleteConsumption(consumptionId) {
   }
 }
 
-export function createCategory(name) {
+export function createCategory({ name }) {
   return (dispatch, getState) => {
-    return $.ajax({
-      url: '/categories',
-      type: 'POST',
-      data: {
-        name,
-      },
-      success: (data) => {
-        return dispatch({ type: types.CREATE_CATEGORY, lastRow: data });
-      },
-      error: (data) => {
-        return dispatch({ type: null });
-      }
-    });
+    return request('POST', '/categories')
+      .send({
+        name
+      })
+      .then(response => {
+        dispatch({
+          type: types.CREATE_CATEGORY,
+          data: response.body
+        })
+    })
   }
 }
 
 
-export function deleteCategory(category_id) {
-  $.ajax({
-    url: '/categories',
-    type: 'DELETE',
-    async: false,
-    data: {
-      id: category_id,
-    },
-    success(data) {
-      // @TODO: process errors
-    },
-  });
-
-  return { type: types.DELETE_CATEGORY, category_id };
+export function deleteCategory(categoryId) {
+  return (dispatch, getState) => {
+    return request('DELETE', '/categories')
+      .send({
+        id: categoryId
+      })
+      .then(response => {
+        dispatch({
+          type: types.DELETE_CATEGORY,
+          data: response.body
+        })
+    })
+  }
 }
 
 export function setBudget(sum, comment) {
@@ -233,7 +228,7 @@ export function getMonthlyByCategory({ startDate, endDate }) {
 export function getBudgetChart({ startDate, endDate }) {
   return (dispatch, getState) => {
     return request('GET', '/budget-chart')
-      .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD')  })
+      .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD') })
       .then(response => {
         dispatch({
           type: types.INIT_BUDGET_CHART,
@@ -244,5 +239,14 @@ export function getBudgetChart({ startDate, endDate }) {
         })
     })
   }
+}
+
+export function getGiphy() {
+  return request('GET', 'https://api.giphy.com/v1/gifs/random')
+    .query({
+      api_key: 'zoqSutNq1MM1UlaP6Xg6Hdl4IJ4dxxk6',
+      tag: 'money',
+      rating: 'G',
+    })
 }
 

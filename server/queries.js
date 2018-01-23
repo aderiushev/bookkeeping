@@ -28,10 +28,10 @@ module.exports = (db) => {
                 return "SELECT category.id, category.name, strftime('%d.%m.%Y %H:%m', category.ts) as date FROM category WHERE category.id = ?";
             },
             update: () => {
-                return "UPDATE category SET name = ? WHERE id = ?";
+                return "UPDATE category SET name = :name WHERE id = :id";
             },
             delete: () => {
-                return "DELETE FROM category WHERE id = ?";
+                return "DELETE FROM category WHERE id = :id";
             }
         },
         consumptions: {

@@ -8,13 +8,11 @@ module.exports = (app, db) => {
 
     app.get("/categories", function (req, res) {
         db.all(queries.categories.read(), [], function (error, rows) {
-            var categories = [];
             if (error) {
-                console.log(error);
+                res.status(500).send(error)
             } else {
-                categories = rows
+                res.json(rows)
             }
-            res.json(categories)
         });
     });
 
@@ -24,9 +22,10 @@ module.exports = (app, db) => {
                 var lastId = this.lastID;
                 db.get(queries.consumptions.readById(), [lastId], function (error, rows) {
                     if (error) {
-                        console.log(error);
+                        res.status(500).send(error)
+                    } else {
+                        res.json(rows)
                     }
-                    res.json(rows)
                 });
             });
         }
@@ -41,9 +40,10 @@ module.exports = (app, db) => {
                 var lastId = this.lastID;
                 db.get(queries.categories.readById(), [lastId], function (error, rows) {
                     if (error) {
-                        console.log(error);
+                        res.status(500).send(error)
+                    } else {
+                        res.json(rows)
                     }
-                    res.json(rows)
                 });
             });
         }
@@ -54,19 +54,18 @@ module.exports = (app, db) => {
 
     app.get("/consumptions", function (req, res) {
         db.all(queries.consumptions.read(), [], function (error, rows) {
-            var consumptions = [];
             if (error) {
-                console.log(error);
+                res.status(500).send(error)
             } else {
-                consumptions = rows
+                res.json(rows)
             }
-            res.json(consumptions)
+           
         });
     });
 
     app.delete("/consumptions", function (req, res) {
         if (req.body.id) {
-            db.run(queries.consumptions.delete(), {':id': req.body.id}, function (error) {
+            db.run(queries.consumptions.delete(), { ':id': req.body.id }, function (error) {
                 if (error) {
                     res.status(500).send(error)
                 } else {
@@ -81,7 +80,7 @@ module.exports = (app, db) => {
 
     app.put("/consumptions", function (req, res) {
         if (req.body.id, req.body.consumption) {
-            db.run(queries.consumptions.update(), {':id': req.body.id, ':sum': req.body.consumption.sum, ':comment': req.body.consumption.comment}, function (error) {
+            db.run(queries.consumptions.update(), { ':id': req.body.id, ':sum': req.body.consumption.sum, ':comment': req.body.consumption.comment }, function (error) {
                 if (error) {
                     res.status(500).send(error)
                 } else {
@@ -96,8 +95,12 @@ module.exports = (app, db) => {
 
     app.put("/categories", function (req, res) {
         if (req.body.name && req.body.id) {
-            db.run(queries.categories.update(), [req.body.name, req.body.id], function () {
-                res.json({ status: true });
+            db.run(queries.categories.update(), { ':id': req.body.id, ':name': req.body.category.name }, function (error) {
+                if (error) {
+                    res.status(500).send(error)
+                } else {
+                    res.json(req.body);
+                }
             });
         }
         else {
@@ -107,8 +110,12 @@ module.exports = (app, db) => {
 
     app.delete("/categories", function (req, res) {
         if (req.body.id) {
-            db.run(queries.categories.delete(), [req.body.id], function () {
-                res.json({status: true});
+            db.run(queries.categories.delete(), { ':id': req.body.id }, function (error) {
+                if (error) {
+                    res.status(500).send(error)
+                } else {
+                    res.json({ id: req.body.id });
+                }
             });
         }
         else {

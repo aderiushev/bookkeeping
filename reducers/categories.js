@@ -1,28 +1,34 @@
-import { INIT_CATEGORIES, CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from '../constants/ActionTypes'
+import { GET_CATEGORIES_LIST, CREATE_CATEGORY, UPDATE_CATEGORY, DELETE_CATEGORY } from '../constants/ActionTypes'
 
-let initialState = [];
+const initialState = {
+    list: []
+}
 
 export default function categories(state = initialState, action) {
     switch (action.type) {
-        case INIT_CATEGORIES:
-            return action.categories;
-
+        case GET_CATEGORIES_LIST:
+            return {
+                ...state,
+                list: action.data
+            }
         case CREATE_CATEGORY:
-            return [
-                action.lastRow,
-                ...state
-            ];
-
+            return {
+                ...state,
+                list: [
+                    action.data,
+                    ...state.list,
+                ]
+            }
         case UPDATE_CATEGORY:
-            return state.map(category =>
-                category.id === action.category_id ? Object.assign({}, category, { name: action.name }) : category
-            );
-
+            return {
+                ...state,
+                list: state.list.map(category => category.id === action.data.id ? { ...category, ...action.data.category } : category)
+            }
         case DELETE_CATEGORY:
-            return state.filter(category =>
-                category.id !== action.category_id
-            );
-
+            return {
+                ...state,
+                list: state.list.filter(category => category.id !== action.data.id)
+            }
         default:
             return state
     }

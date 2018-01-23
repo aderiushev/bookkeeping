@@ -35,6 +35,18 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     height: 300
+  },
+  gifImg: {
+    width: 300,
+    height: 200,
+    backgroundSize: 'cover',
+    position: 'fixed',
+    left: 0,
+    right: 0,
+    borderRadius: theme.spacing.unit,
+    backgroundSize: 'cover',
+    zIndex: 9999,
+    margin: '0 auto'
   }
 });
 
@@ -44,6 +56,7 @@ class ConsumptionAdd extends Component {
       category_id: null,
       sum: 500,
       comment: '',
+      gifImageUrl: null
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,26 +65,45 @@ class ConsumptionAdd extends Component {
     }
   }
 
-  createConsumption = (event) => {
-    this.props.createConsumption(this.state.category_id, this.state.sum, this.state.comment, this.props.budget.id);
-    this.props.updateMoneyLeft();
+  createConsumption = event => {
+    const { createConsumption, updateMoneyLeft, getGiphy, budget } = this.props
+    const { category_id, sum, comment } = this.state
+
+    createConsumption({ category_id, sum, comment, budget_id: budget.id });
+    updateMoneyLeft();
+
+    getGiphy().then(response => {
+      let gifUrl = null
+      try {
+        gifUrl = response.body.data.fixed_width_downsampled_url
+      } catch (error) {
+        console.error('unable to get GIF', error)
+        return;
+      }
+
+      this.setState({ gifImageUrl: gifUrl })
+
+      setTimeout(() => {
+        this.setState({ gifImageUrl: null })
+      }, 3000)
+    })
   }
 
-  changeSum = (event) => {
+  changeSum = event => {
     this.setState({ sum: event.target.value });
   }
 
-  changeComment = (event) => {
+  changeComment = event => {
     this.setState({ comment: event.target.value });
   }
 
-  changeCategory = (event) => {
+  changeCategory = event => {
     this.setState({ category_id: event.target.value });
   }
 
   render() {
     const { categories, classes } = this.props
-    const { category_id } = this.state
+    const { category_id, gifImageUrl } = this.state
 
     return (
       <div className={classes.wrapper}>
@@ -114,6 +146,9 @@ class ConsumptionAdd extends Component {
             <AddIcon />
           </Button>
         </Paper>
+        {gifImageUrl &&
+          <div className={classes.gifImg} style={{ backgroundImage: `url(${gifImageUrl})`}} />
+        }
       </div>
     );
   }
