@@ -24,7 +24,8 @@ const styles = theme => ({
       right: theme.spacing.unit,
       justifyContent: 'center',
       backgroundColor: theme.palette.grey['50'],
-      opacity: 0.8
+      opacity: 0.8,
+      transform: 'translate3d(0,0,0)'
     }
   },
   icon: {

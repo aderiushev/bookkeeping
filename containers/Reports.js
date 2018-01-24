@@ -63,7 +63,7 @@ class Reports extends Component {
                     data={reports.monthlyTable} 
                 /> 
                 <MonthlyByCategory
-                className={classes.mobileHidden}
+                    className={classes.mobileHidden}
                     data={reports.monthlyByCategory} 
                 /> 
                 <BudgetChart
