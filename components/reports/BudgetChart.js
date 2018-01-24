@@ -1,13 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-
-//const Chart = require('react-google-charts').Chart;
 import { Chart } from 'react-google-charts'
 
 class BudgetChart extends Component {
   render() {
     const { data } = this.props;
-
-    console.warn('data', data)
 
     return (
       <div>

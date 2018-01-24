@@ -7,10 +7,10 @@ import {
 
 class MonthlyTable extends Component {
   render() {
-    const { data } = this.props;
+    const { data, className } = this.props;
 
     return (
-      <div>
+      <div className={className}>
         <h2 style={{ textAlign: 'center' }}>
           Daily Consumptions Table:
         </h2>
