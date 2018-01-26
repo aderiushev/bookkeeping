@@ -25,8 +25,8 @@ const styles = theme => ({
       justifyContent: 'center',
       backgroundColor: theme.palette.grey['50'],
       opacity: 0.8,
-      transform: 'translate3d(0,0,0)'
-      '-webkit-overflow-scrolling': touch
+      transform: 'translate3d(0,0,0)',
+      '-webkit-overflow-scrolling': 'touch'
     }
   },
   icon: {

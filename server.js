@@ -28,7 +28,7 @@ app.set('view engine', 'html');
 
 
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('bookkeeping.db');
+var db = new sqlite3.Database('bookkeeping.sqlite3');
 var routes = require('./server/routes')(app, db);
 
 app.listen(port, function(error) {
