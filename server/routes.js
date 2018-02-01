@@ -17,8 +17,8 @@ module.exports = (app, db) => {
     });
 
     app.post("/consumptions", function (req, res) {
-        if (req.body.category_id && req.body.budget_id && req.body.sum) {
-            db.run(queries.consumptions.create(), [req.body.category_id, req.body.budget_id, req.body.sum, req.body.comment], function () {
+        if (req.body.category_id && req.body.sum) {
+            db.run(queries.consumptions.create(), [req.body.category_id, 0, req.body.sum, req.body.comment], function () {
                 var lastId = this.lastID;
                 db.get(queries.consumptions.readById(), [lastId], function (error, rows) {
                     if (error) {

@@ -21,14 +21,14 @@ const Consumptions = React.createClass({
   componentDidMount() {
     const { actions } = this.props;
 
-    actions.getCurrentBudget()
+    //actions.getCurrentBudget()
     actions.getCategoriesList()
     actions.getConsumptionsList()
   },
 
   render() {
     const {
-      actions, consumptions, categories, budget, classes
+      actions, consumptions, categories, classes
     } = this.props;
 
     return (
@@ -38,12 +38,10 @@ const Consumptions = React.createClass({
           updateMoneyLeft={actions.updateMoneyLeft}
           getGiphy={getGiphy}
           categories={categories}
-          budget={budget}
         />
         <ConsumptionTable
           className={classes.table}
           consumptions={consumptions}
-          budget={budget}
           updateMoneyLeft={actions.updateMoneyLeft}
           deleteConsumption={actions.deleteConsumption}
           updateConsumption={actions.updateConsumption}
@@ -57,14 +55,14 @@ Consumptions.propTypes = {
   consumptions: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
-  budget: PropTypes.object.isRequired,
+  //budget: PropTypes.object.isRequired,
 };
 
 
 const mapStateToProps = state => ({
   consumptions: state.consumptions.list,
   categories: state.categories.list,
-  budget: state.budget.current,
+  //budget: state.budget.current,
 });
 
 function mapDispatchToProps(dispatch) {

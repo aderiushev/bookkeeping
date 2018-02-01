@@ -66,10 +66,10 @@ class ConsumptionAdd extends Component {
   }
 
   createConsumption = event => {
-    const { createConsumption, updateMoneyLeft, getGiphy, budget } = this.props
+    const { createConsumption, updateMoneyLeft, getGiphy } = this.props
     const { category_id, sum, comment } = this.state
 
-    createConsumption({ category_id, sum, comment, budget_id: budget.id });
+    createConsumption({ category_id, sum, comment });
     updateMoneyLeft();
 
     getGiphy().then(response => {

@@ -51,12 +51,11 @@ export function getCurrentBudget() {
   }
 }
 
-export function createConsumption({ category_id, sum, comment, budget_id }) {
+export function createConsumption({ category_id, sum, comment }) {
   return (dispatch, getState) => {
     return request('POST', '/consumptions')
       .send({
         category_id,
-        budget_id,
         sum,
         comment
       })
