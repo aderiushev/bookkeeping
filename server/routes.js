@@ -175,21 +175,22 @@ module.exports = (app, db) => {
                 reportData.columns = [{ label: 'Budget', type: 'number' }];
 
                 var currentDate = moment(req.query.startDate)
-                var currentBudget = null
+                var currentBudget = { sum: 0 }
                 while (currentDate <= moment(req.query.endDate)) {
                     var formattedDate = currentDate.format('DD.MM')
-                    currentBudget = budgetRows.find(budgetRow => budgetRow.date === formattedDate) || currentBudget
-                    
-                    if (currentBudget) {
-                        var currentConsumptions = consumptionRows.find(consumptionRow => consumptionRow.date === formattedDate) || 0
-                        if (currentConsumptions) {
-                           currentBudget = { sum: currentBudget.sum - currentConsumptions.sum }
-                        }
-                        rowsTmp.push([
-                            formattedDate,
-                            currentBudget.sum
-                        ]);   
+                    var budgetChange = budgetRows.find(budgetRow => budgetRow.date === formattedDate)
+                    if (budgetChange) {
+                        currentBudget.sum += budgetChange.sum
                     }
+                    
+                    var currentConsumptions = consumptionRows.find(consumptionRow => consumptionRow.date === formattedDate)
+                    if (currentConsumptions) {
+                       currentBudget.sum = currentBudget.sum - currentConsumptions.sum
+                    }
+                    rowsTmp.push([
+                        formattedDate,
+                        currentBudget.sum
+                    ]);
 
                     currentDate.add(1, 'day')
                 }

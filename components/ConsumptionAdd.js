@@ -69,23 +69,24 @@ class ConsumptionAdd extends Component {
     const { createConsumption, updateMoneyLeft, getGiphy } = this.props
     const { category_id, sum, comment } = this.state
 
-    createConsumption({ category_id, sum, comment });
-    updateMoneyLeft();
+    createConsumption({ category_id, sum, comment })
+    .then(updateMoneyLeft)
+    .then(() => {
+      getGiphy().then(response => {
+        let gifUrl = null
+        try {
+          gifUrl = response.body.data.fixed_width_downsampled_url
+        } catch (error) {
+          console.error('unable to get GIF', error)
+          return;
+        }
 
-    getGiphy().then(response => {
-      let gifUrl = null
-      try {
-        gifUrl = response.body.data.fixed_width_downsampled_url
-      } catch (error) {
-        console.error('unable to get GIF', error)
-        return;
-      }
+        this.setState({ gifImageUrl: gifUrl })
 
-      this.setState({ gifImageUrl: gifUrl })
-
-      setTimeout(() => {
-        this.setState({ gifImageUrl: null })
-      }, 3000)
+        setTimeout(() => {
+          this.setState({ gifImageUrl: null })
+        }, 3000)
+      })
     })
   }
 

@@ -78,7 +78,8 @@ module.exports = (db) => {
                         FROM budget b
                         WHERE b.ts >= ?
                         AND strftime('%Y-%m-%d', b.ts) <= ?
-                        GROUP BY date`
+                        GROUP BY date
+                        ORDER BY date`
                 }             
             },
             monthlyTable: () => {

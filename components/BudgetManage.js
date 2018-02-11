@@ -47,8 +47,7 @@ class BudgetManage extends Component {
     const { createBudget, updateMoneyLeft } = this.props
     const { sum, comment } = this.state
 
-    createBudget({ sum, comment });
-    updateMoneyLeft();
+    createBudget({ sum, comment }).then(updateMoneyLeft)
   }
 
   render() {
