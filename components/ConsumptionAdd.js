@@ -52,16 +52,20 @@ const styles = theme => ({
 
 class ConsumptionAdd extends Component {
 
-  state = {
-      category_id: null,
-      sum: 500,
-      comment: '',
-      gifImageUrl: null
+  static defaultProps = {
+    categories: []
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (Array.isArray(nextProps.categories) && nextProps.categories.length && !this.state.category_id) {
-      this.setState({ category_id: nextProps.categories[0].id });
+  state = {
+    category_id: null,
+    sum: null,
+    comment: '',
+    gifImageUrl: null
+  }
+
+  componentDidUpdate() {
+    if (!this.state.category_id && this.props.categories.length) {
+      this.setState({ category_id: this.props.categories[0].id })
     }
   }
 
@@ -72,6 +76,11 @@ class ConsumptionAdd extends Component {
     createConsumption({ category_id, sum, comment })
     .then(updateMoneyLeft)
     .then(() => {
+      this.setState({
+        category_id: null,
+        sum: null,
+        comment: ''
+      })
       getGiphy().then(response => {
         let gifUrl = null
         try {
@@ -104,7 +113,7 @@ class ConsumptionAdd extends Component {
 
   render() {
     const { categories, classes } = this.props
-    const { category_id, gifImageUrl } = this.state
+    const { category_id, comment, sum, gifImageUrl } = this.state
 
     return (
       <div className={classes.wrapper}>
@@ -130,7 +139,7 @@ class ConsumptionAdd extends Component {
           <FormControl className={classes.field}>
             <InputLabel>Amount</InputLabel>
             <Input
-              value={this.state.sum}
+              value={sum}
               onChange={this.changeSum}
               endAdornment={<InputAdornment position="end">₽</InputAdornment>}
             />
@@ -138,7 +147,7 @@ class ConsumptionAdd extends Component {
           <FormControl className={classes.field}>
             <TextField
               style={{ textAlign: 'center' }}
-              defaultValue={this.state.comment}
+              value={comment}
               onChange={this.changeComment}
               placeholder="Comment"
             />
