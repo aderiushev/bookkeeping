@@ -187,7 +187,7 @@ class ConsumptionTable extends Component {
     return (
       <div className={className}>
         <h3 style={{ textAlign: 'center' }}>
-          List of last 20 Consumptions
+          List of last 200 Consumptions
         </h3>
         <Table>
           <TableHead>

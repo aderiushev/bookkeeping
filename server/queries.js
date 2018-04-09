@@ -39,7 +39,7 @@ module.exports = (db) => {
                 return "INSERT INTO consumption(category_id, budget_id, sum, comment) VALUES(?, ?, ?, ?)";
             },
             read: () => {
-                return "SELECT consumption.id, category.name, consumption.sum, consumption.comment, strftime('%d.%m.%Y %H:%m', consumption.ts) as date FROM consumption INNER JOIN category ON consumption.category_id = category.id ORDER BY consumption.ts DESC LIMIT 20";
+                return "SELECT consumption.id, category.name, consumption.sum, consumption.comment, strftime('%d.%m.%Y %H:%m', consumption.ts) as date FROM consumption INNER JOIN category ON consumption.category_id = category.id ORDER BY consumption.ts DESC LIMIT 200";
             },
             readById: () => {
                 return "SELECT consumption.id, category.name, consumption.sum, consumption.comment, strftime('%d.%m.%Y %H:%m', consumption.ts) as date FROM consumption INNER JOIN category ON consumption.category_id = category.id WHERE consumption.id = ?";
