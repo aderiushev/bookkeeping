@@ -1,11 +1,11 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import MonthlyChart from '../components/reports/MonthlyChart';
-import BudgetChart from '../components/reports/BudgetChart';
 import MonthlyTable from '../components/reports/MonthlyTable';
 import MonthlyByCategory from '../components/reports/MonthlyByCategory';
 import RangeCalendar from '../components/reports/RangeCalendar';
@@ -17,11 +17,11 @@ const styles = theme => ({
       display: 'none'
     }
   }
-})
+});
 
 class Reports extends Component {
     static propTypes = {
-        reports: PropTypes.object
+        reports: PropTypes.shape()
     };
 
     state = {
@@ -40,7 +40,6 @@ class Reports extends Component {
         actions.getMonthlyChart(dateRange)
         actions.getMonthlyTable(dateRange)
         actions.getMonthlyByCategory(dateRange)
-        actions.getBudgetChart(dateRange)
 
         this.setState({ dateRange })
     }
@@ -65,9 +64,6 @@ class Reports extends Component {
                 <MonthlyByCategory
                     className={classes.mobileHidden}
                     data={reports.monthlyByCategory} 
-                /> 
-                <BudgetChart
-                    data={reports.budgetChart}
                 />
             </div>
         )
@@ -87,7 +83,7 @@ function mapDispatchToProps (dispatch) {
 }
 
 Reports.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.shape().isRequired
 };
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Reports));

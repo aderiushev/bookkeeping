@@ -1,13 +1,11 @@
+import React, { Component } from 'react';
+import { DateRangePicker } from 'react-dates';
+import Button from '@material-ui/core/Button';
+import moment from 'moment';
+import { withStyles } from '@material-ui/core/styles';
+
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
-
-import React, { Component, PropTypes } from 'react';
-import { DateRangePicker } from 'react-dates';
-import Button from 'material-ui/Button';
-import Hidden from 'material-ui/Hidden';
-import * as actions from '../../actions';
-import moment from 'moment';
-import { withStyles } from 'material-ui/styles';
 
 const styles = theme => ({
   wrapper: {

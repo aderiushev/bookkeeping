@@ -1,10 +1,11 @@
-import React, { PropTypes, Component } from 'react';
-import { withStyles } from 'material-ui/styles';
-import Table, { TableHeaderColumn, TableRow, TableHead, TableCell, TableBody } from 'material-ui/Table';
-import TextField from 'material-ui/TextField';
-import Popover from 'material-ui/Popover';
-import Button from 'material-ui/Button';
-import Divider from 'material-ui/Divider';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Table, { TableHeaderColumn, TableRow, TableHead, TableCell, TableBody } from '@material-ui/core/Table';
+import TextField from '@material-ui/core/TextField';
+import Popover from '@material-ui/core/Popover';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
   mobileHiddenCol: {
@@ -237,7 +238,7 @@ class BudgetTable extends Component {
 }
 
 BudgetTable.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.shape().isRequired
 };
 
 export default withStyles(styles)(BudgetTable);

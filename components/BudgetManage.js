@@ -1,14 +1,11 @@
-import React, { Component, PropTypes } from 'react';
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
-import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-import TextField from 'material-ui/TextField';
-import { withStyles } from 'material-ui/styles';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-
-import {
-  blue500, red500,
-} from 'material-ui/colors';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import Input, { InputLabel, InputAdornment } from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
+import FormControl from '@material-ui/core/FormControl';
 
 const styles = theme => ({
   form: {
@@ -81,7 +78,7 @@ class BudgetManage extends Component {
 
 BudgetManage.propTypes = {
   createBudget: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.shape().isRequired
 };
 
 export default withStyles(styles)(BudgetManage);

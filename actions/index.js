@@ -1,59 +1,28 @@
+import request from 'superagent';
 import * as types from '../constants/ActionTypes';
-import $ from 'jquery';
-import request from 'superagent'
-
 
 export function getConsumptionsList() {
-  return (dispatch, getState) => {
-    return request('GET', '/consumptions')
-      .then(response => {
-        dispatch({
-          type: types.GET_CONSUMPTIONS_LIST,
-          data: response.body
-        })
-    })
-  }
+  return dispatch =>
+    request('GET', '/api/consumptions').then((response) => {
+      dispatch({
+        type: types.GET_CONSUMPTIONS_LIST,
+        data: response.body,
+      });
+    });
 }
 
 export function getCategoriesList() {
-  return (dispatch, getState) => {
-    return request('GET', '/categories')
-      .then(response => {
-        dispatch({
-          type: types.GET_CATEGORIES_LIST,
-          data: response.body
-        })
-    })
-  }
-}
-
-export function getBudgetsList() {
-  return (dispatch, getState) => {
-    return request('GET', '/budgets')
-      .then(response => {
-        dispatch({
-          type: types.GET_BUDGETS_LIST,
-          data: response.body
-        })
-    })
-  }
-}
-
-export function getCurrentBudget() {
-  return (dispatch, getState) => {
-    return request('GET', '/budget')
-      .then(response => {
-        dispatch({
-          type: types.GET_CURRENT_BUDGET,
-          data: response.body
-        })
-      })
-  }
+  return dispatch => request('GET', '/api/categories').then((response) => {
+    dispatch({
+      type: types.GET_CATEGORIES_LIST,
+      data: response.body,
+    });
+  });
 }
 
 export function createConsumption({ category_id, sum, comment }) {
-  return (dispatch, getState) => {
-    return request('POST', '/consumptions')
+  return (dispatch) => {
+    return request('POST', '/api/consumptions')
       .send({
         category_id,
         sum,
@@ -69,8 +38,8 @@ export function createConsumption({ category_id, sum, comment }) {
 }
 
 export function updateConsumption(id, consumption) {
-  return (dispatch, getState) => {
-    return request('PUT', '/consumptions')
+  return (dispatch) => {
+    return request('PUT', '/api/consumptions')
       .send({
         id,
         consumption
@@ -85,8 +54,8 @@ export function updateConsumption(id, consumption) {
 }
 
 export function updateCategory(id, category) {
-  return (dispatch, getState) => {
-    return request('PUT', '/categories')
+  return (dispatch) => {
+    return request('PUT', '/api/categories')
       .send({
         id,
         category
@@ -101,8 +70,8 @@ export function updateCategory(id, category) {
 }
 
 export function deleteConsumption(consumptionId) {
-  return (dispatch, getState) => {
-    return request('DELETE', '/consumptions')
+  return (dispatch) => {
+    return request('DELETE', '/api/consumptions')
       .send({
         id: consumptionId
       })
@@ -116,8 +85,8 @@ export function deleteConsumption(consumptionId) {
 }
 
 export function createCategory({ name }) {
-  return (dispatch, getState) => {
-    return request('POST', '/categories')
+  return (dispatch) => {
+    return request('POST', '/api/categories')
       .send({
         name
       })
@@ -132,8 +101,8 @@ export function createCategory({ name }) {
 
 
 export function deleteCategory(categoryId) {
-  return (dispatch, getState) => {
-    return request('DELETE', '/categories')
+  return (dispatch) => {
+    return request('DELETE', '/api/categories')
       .send({
         id: categoryId
       })
@@ -146,71 +115,10 @@ export function deleteCategory(categoryId) {
   }
 }
 
-export function createBudget({ sum, comment }) {
-  return (dispatch, getState) => {
-    return request('POST', '/budget')
-      .send({
-        sum,
-        comment
-      })
-      .then(response => {
-        dispatch({
-          type: types.CREATE_BUDGET,
-          data: response.body
-        })
-    })
-  }
-}
-
-export function updateBudget(id,  budget) {
-  return (dispatch, getState) => {
-    return request('PUT', '/budget')
-      .send({
-        id,
-        budget
-      })
-      .then(response => {
-        dispatch({
-          type: types.UPDATE_BUDGET,
-          data: response.body
-        })
-    })
-  }
-}
-
-export function deleteBudget(budgetId) {
-  return (dispatch, getState) => {
-    return request('DELETE', '/budget')
-      .send({
-        id: budgetId
-      })
-      .then(response => {
-        dispatch({
-          type: types.DELETE_BUDGET,
-          data: response.body
-        })
-    })
-  }
-}
-
-export function updateMoneyLeft() {
-  let moneyLeft = {};
-
-  $.ajax({
-    url: '/money-left',
-    type: 'GET',
-    async: false,
-    success(data) {
-      moneyLeft = data.moneyLeft;
-    },
-  });
-
-  return { type: types.UPDATE_MONEY_LEFT, moneyLeft };
-}
 
 export function getMonthlyChart({ startDate, endDate }) {
-  return (dispatch, getState) => {
-    return request('GET', '/monthly-chart')
+  return (dispatch) => {
+    return request('GET', '/api/monthly-chart')
       .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD')  })
       .then(response => {
         dispatch({
@@ -225,8 +133,8 @@ export function getMonthlyChart({ startDate, endDate }) {
 }
 
 export function getMonthlyTable({ startDate, endDate }) {
-  return (dispatch, getState) => {
-    return request('GET', '/monthly-table')
+  return (dispatch) => {
+    return request('GET', '/api/monthly-table')
       .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD')  })
       .then(response => {
         dispatch({
@@ -239,31 +147,15 @@ export function getMonthlyTable({ startDate, endDate }) {
 
 
 export function getMonthlyByCategory({ startDate, endDate }) {
-  return (dispatch, getState) => {
-    return request('GET', '/monthly-by-category')
+  return (dispatch) => {
+    return request('GET', '/api/monthly-by-category')
       .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD')  })
-      .then(response => {
+      .then((response) => {
         dispatch({
           type: types.INIT_MONTHLY_BY_CATEGORY,
-          data: response.body
-        })
-    })
-  }
-}
-
-export function getBudgetChart({ startDate, endDate }) {
-  return (dispatch, getState) => {
-    return request('GET', '/budget-chart')
-      .query({ startDate: startDate.format('YYYY-MM-DD'), endDate: endDate.format('YYYY-MM-DD') })
-      .then(response => {
-        dispatch({
-          type: types.INIT_BUDGET_CHART,
-          data: {
-            columns: [{ label: 'Date', type: 'string' }].concat(response.body.columns),
-            rows: response.body.rows
-          }
-        })
-    })
+          data: response.body,
+        });
+    });
   }
 }
 

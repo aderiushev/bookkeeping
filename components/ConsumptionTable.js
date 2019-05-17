@@ -1,10 +1,16 @@
-import React, { PropTypes, Component } from 'react';
-import { withStyles } from 'material-ui/styles';
-import Table, { TableHeaderColumn, TableRow, TableHead, TableCell, TableBody } from 'material-ui/Table';
-import TextField from 'material-ui/TextField';
-import Popover from 'material-ui/Popover';
-import Button from 'material-ui/Button';
-import Divider from 'material-ui/Divider';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
+
+import TextField from '@material-ui/core/TextField';
+import Popover from '@material-ui/core/Popover';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
   mobileHiddenCol: {
@@ -12,48 +18,46 @@ const styles = theme => ({
       display: 'none'
     }
   }
-})
+});
 
 class CustomPopover extends Component {
   state = {
     isDeleteCoverVisible: false
-  }
+  };
 
   onDeleteClick = () => {
     this.setState({ isDeleteCoverVisible: true })
-  }
+  };
 
   onConfirmDeleteClick = () => {
     const { deleteConsumption } = this.props
 
-    this.confirmationClose()
+    this.confirmationClose();
 
     deleteConsumption()
-  }
+  };
 
   confirmationClose = () => {
     this.setState({ isDeleteCoverVisible: false })
-  }
+  };
 
   onClose = () => {
     const { handleToolbarClose } = this.props
 
-    this.confirmationClose()
+    this.confirmationClose();
 
     handleToolbarClose()
-  }
+  };
 
   render () {
     const {
       consumption,
       isToolbarOpen,
-      handleToolbarClose,
       toolbarAnchorEl,
-      deleteConsumption,
       updateConsumption,
       changeSum,
       changeComment
-    } = this.props
+    } = this.props;
     const { isDeleteCoverVisible } = this.state
 
     return (
@@ -125,7 +129,7 @@ class ConsumptionTable extends Component {
     toolbarConsumption: {
       id: null, sum: null, comment: null, date: null,
     }
-  }
+  };
 
   handleToolbarOpen = (event, rowIndex) => {
     this.setState({
@@ -133,23 +137,23 @@ class ConsumptionTable extends Component {
       toolbarAnchorEl: event.target,
       toolbarConsumption: { ...this.props.consumptions[rowIndex] },
     });
-  }
+  };
 
-  handleToolbarClose = event => {
+  handleToolbarClose = () => {
     this.setState({
       isToolbarOpen: false,
       toolbarConsumption: { id: null, sum: null, date: null },
     });
-  }
+  };
 
   deleteConsumption = () => {
     const { toolbarConsumption } = this.state
     this.props.deleteConsumption(toolbarConsumption.id);
     this.props.updateMoneyLeft();
     this.handleToolbarClose();
-  }
+  };
 
-  updateConsumption = event => {
+  updateConsumption = () => {
     const { updateMoneyLeft, updateConsumption } = this.props
     const { toolbarConsumption }  = this.state
 
@@ -159,9 +163,9 @@ class ConsumptionTable extends Component {
     }).then(() => {
       updateMoneyLeft()
     })
-    
+    ;
     this.handleToolbarClose();
-  }
+  };
 
   changeSum = event => {
     const { toolbarConsumption } = this.state
@@ -172,13 +176,13 @@ class ConsumptionTable extends Component {
     }
 
     this.setState({ toolbarConsumption: updatedToolbarConsumption });
-  }
+  };
 
   changeComment = event => {
     const toolbarConsumption = this.state.toolbarConsumption;
     toolbarConsumption.comment = event.target.value;
     this.setState({ toolbarConsumption });
-  }
+  };
 
   render () {
     const { consumptions, className, classes } = this.props;
@@ -250,7 +254,7 @@ class ConsumptionTable extends Component {
 }
 
 ConsumptionTable.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.shape().isRequired
 };
 
 export default withStyles(styles)(ConsumptionTable);

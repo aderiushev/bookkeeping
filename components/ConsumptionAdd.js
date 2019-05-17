@@ -1,13 +1,16 @@
-import React, { Component, PropTypes } from 'react';
-import Select from 'material-ui/Select';
-import { MenuItem } from 'material-ui/Menu';
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
-import Input, { InputLabel, InputAdornment } from 'material-ui/Input';
-import TextField from 'material-ui/TextField';
-import Paper from 'material-ui/Paper';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { withStyles } from 'material-ui/styles';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Select from '@material-ui/core/Select';
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import FormControl  from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import { withStyles } from '@material-ui/core/styles';
 import backgroundImage from './../assets/images/amsterdam-xlarge.jpg'
 
 const styles = theme => ({
@@ -44,7 +47,6 @@ const styles = theme => ({
     left: 0,
     right: 0,
     borderRadius: theme.spacing.unit,
-    backgroundSize: 'cover',
     zIndex: 9999,
     margin: '0 auto'
   }
@@ -54,85 +56,87 @@ class ConsumptionAdd extends Component {
 
   static defaultProps = {
     categories: []
-  }
+  };
 
   state = {
-    category_id: null,
-    sum: null,
+    category_id: '',
+    sum: '',
     comment: '',
     gifImageUrl: null
-  }
+  };
 
-  componentDidUpdate() {
-    if (!this.state.category_id && this.props.categories.length) {
-      this.setState({ category_id: this.props.categories[0].id })
-    }
-  }
-
-  createConsumption = event => {
-    const { createConsumption, updateMoneyLeft, getGiphy } = this.props
-    const { category_id, sum, comment } = this.state
+  createConsumption = () => {
+    const { createConsumption, updateMoneyLeft, getGiphy } = this.props;
+    const { category_id, sum, comment } = this.state;
 
     createConsumption({ category_id, sum, comment })
     .then(updateMoneyLeft)
     .then(() => {
       this.setState({
-        category_id: null,
-        sum: null,
-        comment: ''
-      })
+        category_id: '',
+        sum: '',
+        comment: '',
+      });
       getGiphy().then(response => {
-        let gifUrl = null
+        let gifUrl = null;
         try {
           gifUrl = response.body.data.fixed_width_downsampled_url
         } catch (error) {
-          console.error('unable to get GIF', error)
+          console.error('unable to get GIF', error);
           return;
         }
 
-        this.setState({ gifImageUrl: gifUrl })
+        this.setState({ gifImageUrl: gifUrl });
 
         setTimeout(() => {
-          this.setState({ gifImageUrl: null })
+          this.setState({ gifImageUrl: null });
         }, 3000)
       })
     })
-  }
+  };
 
-  changeSum = event => {
-    this.setState({ sum: event.target.value });
-  }
+  changeSum = e => {
+    this.setState({ sum: e.target.value });
+  };
 
   changeComment = event => {
     this.setState({ comment: event.target.value });
-  }
+  };
 
-  changeCategory = event => {
-    this.setState({ category_id: event.target.value });
-  }
+  changeCategory = e => {
+    this.setState({ category_id: e.target.value });
+  };
 
   render() {
-    const { categories, classes } = this.props
-    const { category_id, comment, sum, gifImageUrl } = this.state
+    const { categories, classes } = this.props;
+    const { category_id, comment, sum, gifImageUrl } = this.state;
 
     return (
       <div className={classes.wrapper}>
         <Paper className={classes.form}>
           <FormControl className={classes.field}>
-            <InputLabel>Category</InputLabel>
+            <InputLabel shrink htmlFor="category">
+              Category
+            </InputLabel>
             <Select
-              native
-              value={Number(category_id)}
+              label="Category"
+              placeholder="Select the category"
+              value={category_id}
               onChange={this.changeCategory}
-              input={<Input />}
+              input={<Input name="category" id="category" />}
+              name="category"
+              displayEmpty
             >
-              {categories.map((item, index) => (
-                <option
+              <MenuItem value="">
+                <em>Select Category</em>
+              </MenuItem>
+              {categories.map((item) => (
+                <MenuItem
                   value={item.id}
                   key={item.id}
                 >
                   {item.name}
-                </option>
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -152,7 +156,7 @@ class ConsumptionAdd extends Component {
               placeholder="Comment"
             />
           </FormControl>
-          <Button fab color="accent" onClick={this.createConsumption} className={classes.submitBtn}>
+          <Button onClick={this.createConsumption} className={classes.submitBtn}>
             <AddIcon />
           </Button>
         </Paper>
@@ -162,12 +166,16 @@ class ConsumptionAdd extends Component {
       </div>
     );
   }
-};
+}
 
 ConsumptionAdd.propTypes = {
   createConsumption: PropTypes.func.isRequired,
-  categories: PropTypes.array.isRequired,
-  classes: PropTypes.object.isRequired
+  categories: PropTypes.instanceOf(Array).isRequired,
+  classes: PropTypes.shape().isRequired
+};
+
+ConsumptionAdd.defaultProps = {
+  categories: [],
 };
 
 export default withStyles(styles)(ConsumptionAdd);

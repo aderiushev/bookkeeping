@@ -1,30 +1,25 @@
-import React, { Component, PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import * as actions from '../actions';
 import { getGiphy } from '../actions'
 import ConsumptionAdd from '../components/ConsumptionAdd';
 import ConsumptionTable from '../components/ConsumptionTable';
 
-const styles = theme => ({
-  root: {
+const styles = {
 
-  },
-  table: {
-    
-  },
-});
+};
 
-const Consumptions = React.createClass({
+class Consumptions extends React.Component {
 
   componentDidMount() {
     const { actions } = this.props;
 
-    //actions.getCurrentBudget()
-    actions.getCategoriesList()
-    actions.getConsumptionsList()
-  },
+    actions.getCategoriesList();
+    actions.getConsumptionsList();
+  }
 
   render() {
     const {
@@ -39,6 +34,7 @@ const Consumptions = React.createClass({
           getGiphy={getGiphy}
           categories={categories}
         />
+
         <ConsumptionTable
           className={classes.table}
           consumptions={consumptions}
@@ -48,21 +44,19 @@ const Consumptions = React.createClass({
         />
       </div>
     );
-  },
-});
+  };
+}
 
 Consumptions.propTypes = {
   consumptions: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
-  actions: PropTypes.object.isRequired,
-  //budget: PropTypes.object.isRequired,
+  actions: PropTypes.shape().isRequired,
 };
 
 
 const mapStateToProps = state => ({
   consumptions: state.consumptions.list,
   categories: state.categories.list,
-  //budget: state.budget.current,
 });
 
 function mapDispatchToProps(dispatch) {

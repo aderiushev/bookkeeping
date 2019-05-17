@@ -1,25 +1,28 @@
-import React, { Component, PropTypes } from 'react';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import getMuiTheme from 'material-ui/styles/createMuiTheme';
-import Paper from 'material-ui/Paper';
-import { connect } from 'react-redux';
-import AppTheme from '../theme';
+import React from 'react';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { blue } from '@material-ui/core/colors';
+import Paper from '@material-ui/core/Paper';
 import Header from '../components/Header';
-import Reboot from 'material-ui/Reboot';
 
-const muiTheme = getMuiTheme(AppTheme);
 
-const App = function ({ children }) {
-  return (
-    <MuiThemeProvider theme={muiTheme}>
-      <Paper>
-        <Header />
-        <div style={{ marginTop: 80 }}>
-          {children}
-        </div>
-      </Paper>
-    </MuiThemeProvider>
-  );
-};
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+  },
+  typography: {
+    useNextVariants: true,
+  },
+});
 
-export default connect(state => state)(App);
+const App = ({ children }) => (
+  <MuiThemeProvider theme={theme}>
+    <Paper>
+      <Header />
+      <div style={{ marginTop: 80 }}>
+        {children}
+      </div>
+    </Paper>
+  </MuiThemeProvider>
+);
+
+export default App;

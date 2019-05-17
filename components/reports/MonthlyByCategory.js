@@ -1,10 +1,5 @@
-import React, { Component, PropTypes } from 'react';
-import Table, { TableCell, TableRow, TableHead, TableBody } from 'material-ui/Table';
-import {
-  green500,
-  red500,
-} from 'material-ui/colors';
-
+import React, { Component } from 'react';
+import Table, { TableCell, TableRow, TableHead, TableBody } from '@material-ui/core/Table';
 
 class MonthlyByCategory extends Component {
   render() {

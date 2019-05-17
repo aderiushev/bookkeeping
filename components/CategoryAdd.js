@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import Paper from 'material-ui/Paper';
-import AddIcon from 'material-ui-icons/Add';
-import { FormControl, FormHelperText } from 'material-ui/Form';
-import { withStyles } from 'material-ui/styles';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import AddIcon from '@material-ui/icons/Add';
+import FormControl from '@material-ui/core/FormControl';
+import { withStyles } from '@material-ui/core/styles';
 import backgroundImage from './../assets/images/bar-montenegro.jpg'
 
 const styles = theme => ({
@@ -81,7 +82,7 @@ class CategoryAdd extends Component {
 
 CategoryAdd.propTypes = {
   createCategory: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.shape().isRequired
 };
 
 export default withStyles(styles)(CategoryAdd);
