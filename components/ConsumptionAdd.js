@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -66,11 +66,10 @@ class ConsumptionAdd extends Component {
   };
 
   createConsumption = () => {
-    const { createConsumption, updateMoneyLeft, getGiphy } = this.props;
+    const { createConsumption, getGiphy } = this.props;
     const { category_id, sum, comment } = this.state;
 
     createConsumption({ category_id, sum, comment })
-    .then(updateMoneyLeft)
     .then(() => {
       this.setState({
         category_id: '',
@@ -156,9 +155,9 @@ class ConsumptionAdd extends Component {
               placeholder="Comment"
             />
           </FormControl>
-          <Button onClick={this.createConsumption} className={classes.submitBtn}>
+          <Fab onClick={this.createConsumption} className={classes.submitBtn} color="primary">
             <AddIcon />
-          </Button>
+          </Fab>
         </Paper>
         {gifImageUrl &&
           <div className={classes.gifImg} style={{ backgroundImage: `url(${gifImageUrl})`}} />

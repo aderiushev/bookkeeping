@@ -13,20 +13,17 @@ const styles = theme => ({
     alignItems: 'center'
   },
   calendar: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  }    
+  }
 });
 
 class RangeCalendar extends Component {
   state = {
     focusedInput: null
-  }
+  };
 
   handleChange = ({ startDate, endDate }) => {
     this.props.onChange({ startDate, endDate })
-  }
+  };
 
   render() {
     const { startDate, endDate, classes } = this.props
@@ -36,6 +33,7 @@ class RangeCalendar extends Component {
       <div className={classes.wrapper}>
         <div className={classes.calendar}>
           <DateRangePicker
+            small
             startDateId='startDate'
             endDateId='endDate'
             startDate={startDate}
@@ -50,35 +48,30 @@ class RangeCalendar extends Component {
         <div>
           <Button
             mini
-            color='accent'
             onClick={() => this.handleChange({ startDate: moment().subtract(1, 'week'), endDate: moment() })}
           >
             1 week
           </Button>
           <Button
             mini
-            color='accent'
             onClick={() => this.handleChange({ startDate: moment().subtract(1, 'month'), endDate: moment() })}
           >
             1 month
           </Button>
           <Button
             mini
-            color='accent'
             onClick={() =>this.handleChange({ startDate: moment().subtract(3, 'month'), endDate: moment() })}
           >
             3 months
           </Button>
           <Button
             mini
-            color='accent'
             onClick={() => this.handleChange({ startDate: moment().subtract(6, 'month'), endDate: moment() })}
           >
             6 months
           </Button>
           <Button
             mini
-            color='accent'
             onClick={() => this.handleChange({ startDate: moment().subtract(1, 'year'), endDate: moment() })}
           >
             1 year

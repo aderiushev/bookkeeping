@@ -73,15 +73,12 @@ class CustomPopover extends Component {
             <div>
               <p style={{ textAlign: 'center' }}>Are you sure?</p>
               <Button
-                raised
                 style={{ margin: 12 }}
                 onClick={this.confirmationClose}
               >
                 Back
               </Button>
               <Button
-                raised
-                color="accent"
                 style={{ margin: 12 }}
                 onClick={this.onConfirmDeleteClick}
               >
@@ -100,15 +97,12 @@ class CustomPopover extends Component {
               </div>
               <div>
                 <Button
-                  raised
                   style={{ margin: 12 }}
                   onClick={this.onDeleteClick}
                 >
                   Remove
                 </Button>
                 <Button
-                  color="accent"
-                  raised
                   style={{ margin: 12 }}
                   onClick={updateConsumption}
                 >
@@ -149,21 +143,17 @@ class ConsumptionTable extends Component {
   deleteConsumption = () => {
     const { toolbarConsumption } = this.state
     this.props.deleteConsumption(toolbarConsumption.id);
-    this.props.updateMoneyLeft();
     this.handleToolbarClose();
   };
 
   updateConsumption = () => {
-    const { updateMoneyLeft, updateConsumption } = this.props
+    const { updateConsumption } = this.props
     const { toolbarConsumption }  = this.state
 
     updateConsumption(toolbarConsumption.id, {
       sum: toolbarConsumption.sum,
       comment: toolbarConsumption.comment
-    }).then(() => {
-      updateMoneyLeft()
-    })
-    ;
+    });
     this.handleToolbarClose();
   };
 

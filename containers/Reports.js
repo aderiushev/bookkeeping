@@ -5,81 +5,80 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux'
 
 import { withStyles } from '@material-ui/core/styles';
-import MonthlyChart from '../components/reports/MonthlyChart';
-import MonthlyTable from '../components/reports/MonthlyTable';
-import MonthlyByCategory from '../components/reports/MonthlyByCategory';
+import ConsumptionCategoryPieChart from '../components/reports/ConsumptionCategoryPieChart';
+import TotalSpent from '../components/reports/TotalSpent';
 import RangeCalendar from '../components/reports/RangeCalendar';
 import * as actions from '../actions';
 
 const styles = theme => ({
-  mobileHidden: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
+  row: {
+    display: 'flex',
   }
 });
 
 class Reports extends Component {
-    static propTypes = {
-        reports: PropTypes.shape()
-    };
+  static propTypes = {
+    reports: PropTypes.shape(),
+    classes: PropTypes.shape(),
+  };
 
-    state = {
-        dateRange: {
-            startDate: moment().subtract(1, 'months').startOf('day'),
-            endDate: moment()
-        }
+  state = {
+    dateRange: {
+      startDate: moment().subtract(1, 'months').startOf('day'),
+      endDate: moment()
     }
+  };
 
-    componentWillMount() {
-        this.onDateChanged(this.state.dateRange)
-    }
+  componentDidMount() {
+    const { actions } = this.props;
+    const { dateRange } = this.state;
 
-    onDateChanged = (dateRange) => {
-        const { actions } = this.props
-        actions.getMonthlyChart(dateRange)
-        actions.getMonthlyTable(dateRange)
-        actions.getMonthlyByCategory(dateRange)
+    actions.getChartsData(dateRange);
+  }
 
-        this.setState({ dateRange })
-    }
+  onDateChanged = (dateRange) => {
+    const { actions } = this.props;
 
-    render() {
-        const { reports, classes } = this.props;
-        const { dateRange } = this.state
+    actions.getChartsData(dateRange).then(() => {
+      this.setState({ dateRange });
+    });
+  };
 
-        return (
-            <div>
-                <RangeCalendar
-                    onChange={this.onDateChanged}
-                    {...dateRange}
-                />
-                <MonthlyChart
-                    data={reports.monthlyChart}
-                />
-                <MonthlyTable
-                    className={classes.mobileHidden}
-                    data={reports.monthlyTable} 
-                /> 
-                <MonthlyByCategory
-                    className={classes.mobileHidden}
-                    data={reports.monthlyByCategory} 
-                />
-            </div>
-        )
-    };
+  render() {
+    const { report, classes } = this.props;
+    const { dateRange } = this.state;
+
+    return (
+      <div>
+        <RangeCalendar
+          onChange={this.onDateChanged}
+          {...dateRange}
+        />
+
+        <div className={classes.row}>
+          <ConsumptionCategoryPieChart
+            data={report.categoryConsumptionSum}
+          />
+
+          <TotalSpent
+            data={report.totalSpent}
+          />
+        </div>
+      </div>
+    )
+  };
 }
 
 function mapStateToProps (state) {
-    const { reports } = state;
+    const { report } = state;
 
-    return { reports };
+    return { report };
 }
 
 function mapDispatchToProps (dispatch) {
-    return {
-        actions: bindActionCreators(actions, dispatch)
-    }
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  }
 }
 
 Reports.propTypes = {

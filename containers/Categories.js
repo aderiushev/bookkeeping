@@ -16,6 +16,7 @@ class Categories extends Component {
 
   render() {
     const { categories, actions } = this.props;
+
     return (
       <div>
         <CategoryAdd
@@ -32,7 +33,7 @@ class Categories extends Component {
 }
 
 Categories.propTypes = {
-  categories: PropTypes.array.isRequired,
+  categories: PropTypes.instanceOf(Array).isRequired,
   actions: PropTypes.shape().isRequired,
 };
 

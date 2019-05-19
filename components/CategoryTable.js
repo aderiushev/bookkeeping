@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Table, { TableHeaderColumn, TableRow, TableHead, TableCell, TableBody } from '@material-ui/core/Table';
+import Table from '@material-ui/core/Table';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableBody from '@material-ui/core/TableBody';
 import TextField from '@material-ui/core/TextField';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
@@ -13,16 +17,16 @@ const styles = theme => ({
       display: 'none'
     }
   }
-})
+});
 
 class CustomPopover extends Component {
   state = {
     isDeleteCoverVisible: false
-  }
+  };
 
   onDeleteClick = () => {
     this.setState({ isDeleteCoverVisible: true })
-  }
+  };
 
   onConfirmDeleteClick = () => {
     const { deleteCategory } = this.props
@@ -30,11 +34,11 @@ class CustomPopover extends Component {
     this.confirmationClose()
 
     deleteCategory()
-  }
+  };
 
   confirmationClose = () => {
     this.setState({ isDeleteCoverVisible: false })
-  }
+  };
 
   onClose = () => {
     const { handleToolbarClose } = this.props
@@ -42,19 +46,17 @@ class CustomPopover extends Component {
     this.confirmationClose()
 
     handleToolbarClose()
-  }
+  };
 
   render () {
     const {
       category,
       isToolbarOpen,
-      handleToolbarClose,
       toolbarAnchorEl,
-      deleteCategory,
       updateCategory,
       changeName
-    } = this.props
-    const { isDeleteCoverVisible } = this.state
+    } = this.props;
+    const { isDeleteCoverVisible } = this.state;
 
     return (
       <Popover
@@ -69,15 +71,12 @@ class CustomPopover extends Component {
             <div>
               <p style={{ textAlign: 'center' }}>Are you sure?</p>
               <Button
-                raised
                 style={{ margin: 12 }}
                 onClick={this.confirmationClose}
               >
                 Back
               </Button>
               <Button
-                raised
-                color="accent"
                 style={{ margin: 12 }}
                 onClick={this.onConfirmDeleteClick}
               >
@@ -94,15 +93,12 @@ class CustomPopover extends Component {
               </div>
               <div>
                 <Button
-                  raised
                   style={{ margin: 12 }}
                   onClick={this.onDeleteClick}
                 >
                   Remove
                 </Button>
                 <Button
-                  color="accent"
-                  raised
                   style={{ margin: 12 }}
                   onClick={updateCategory}
                 >
@@ -121,7 +117,7 @@ class CategoryTable extends Component {
     isToolbarOpen: false,
     toolbarAnchorEl: null,
     toolbarCategory: { id: null, name: null, date: null },
-  }
+  };
 
   handleToolbarOpen = (event, rowIndex) => {
     this.setState({
@@ -129,19 +125,19 @@ class CategoryTable extends Component {
       toolbarAnchorEl: event.target,
       toolbarCategory: this.props.categories[rowIndex],
     });
-  }
+  };
 
-  handleToolbarClose = (event) => {
+  handleToolbarClose = () => {
     this.setState({
       isToolbarOpen: false,
       toolbarCategory: { id: null, name: null },
     });
-  }
+  };
 
   deleteCategory = () => {
     this.props.deleteCategory(this.state.toolbarCategory.id);
     this.handleToolbarClose();
-  }
+  };
 
   updateCategory = (event) => {
     const { updateCategory } = this.props
@@ -149,11 +145,11 @@ class CategoryTable extends Component {
 
     updateCategory(toolbarCategory.id, { name : toolbarCategory.name });
     this.handleToolbarClose();
-  }
+  };
 
   changeName = (event) => {
     this.setState({ toolbarCategory: { id: this.state.toolbarCategory.id, name: event.target.value, date: this.state.toolbarCategory.date } });
-  }
+  };
 
   render() {
     const { categories, classes } = this.props;
@@ -172,11 +168,7 @@ class CategoryTable extends Component {
               <TableCell tooltip="Date" className={classes.mobileHiddenCol}>Date</TableCell>
             </TableRow>
           </TableHead>
-          <TableBody
-            displayRowCheckbox={false}
-            showRowHover
-            stripedRows
-          >
+          <TableBody>
             {categories.map((item, index) =>
               <TableRow key={index}>
                 <TableCell onClick={(e) => this.handleToolbarOpen(e, index)}>

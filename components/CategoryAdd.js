@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
@@ -38,19 +38,19 @@ const styles = theme => ({
 
 class CategoryAdd extends Component {
   state = {
-    name: ''
-  }
+    name: '',
+  };
 
-  createCategory = event => {
+  createCategory = () => {
     const { createCategory } = this.props
     const { name } = this.state
 
     createCategory({ name });
-  }
+  };
 
   changeName = event => {
     this.setState({ name: event.target.value });
-  }
+  };
 
   render() {
     const { classes } = this.props
@@ -66,14 +66,13 @@ class CategoryAdd extends Component {
               placeholder="Category name"
             />
           </FormControl>
-          <Button
-            fab
-            color="accent"
+          <Fab
+            color="primary"
             onClick={this.createCategory}
             className={classes.submitBtn}
           >
             <AddIcon />
-          </Button>
+          </Fab>
         </Paper>
       </div>
     );

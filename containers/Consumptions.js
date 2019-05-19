@@ -30,7 +30,6 @@ class Consumptions extends React.Component {
       <div className={classes.root}>
         <ConsumptionAdd
           createConsumption={actions.createConsumption}
-          updateMoneyLeft={actions.updateMoneyLeft}
           getGiphy={getGiphy}
           categories={categories}
         />
@@ -38,7 +37,6 @@ class Consumptions extends React.Component {
         <ConsumptionTable
           className={classes.table}
           consumptions={consumptions}
-          updateMoneyLeft={actions.updateMoneyLeft}
           deleteConsumption={actions.deleteConsumption}
           updateConsumption={actions.updateConsumption}
         />

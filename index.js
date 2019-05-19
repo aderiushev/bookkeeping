@@ -10,9 +10,7 @@ import logger from 'redux-logger';
 
 import consumptions from './reducers/consupmptions';
 import categories from './reducers/categories';
-import budget from './reducers/budget';
-import reports from './reducers/reports';
-import moneyLeft from './reducers/moneyLeft';
+import report from './reducers/report';
 
 import App from './containers/App';
 import Reports from './containers/Reports';
@@ -26,9 +24,7 @@ const history = createBrowserHistory();
 const reducers = combineReducers({
   consumptions,
   categories,
-  budget,
-  reports,
-  moneyLeft,
+  report,
   router: connectRouter(history),
 });
 
@@ -40,7 +36,7 @@ ReactDOM.render(
     <ConnectedRouter history={history}>
       <App>
         <Switch>
-          <Route path="/" component={Consumptions} />
+          <Route exact path="/" component={Consumptions} />
           <Route path="/reports" component={Reports} />
           <Route path="/categories" component={Categories} />
         </Switch>
